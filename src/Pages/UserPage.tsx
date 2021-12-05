@@ -1,6 +1,8 @@
 import { Button, Layout, Menu, message, Space } from 'antd';
 import { Logo } from 'Components/Logo';
+import { RoomContainer } from 'Components/RoomContainer';
 import { SeatContainer } from 'Components/SeatContainer';
+import { removeCookie } from 'Functions/cookie';
 import { useState } from 'react';
 
 import {
@@ -11,7 +13,6 @@ import {
   SearchOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { removeCookie } from 'Functions/cookie';
 
 const UserPage = () => {
   const { Sider } = Layout;
@@ -137,6 +138,7 @@ const UserPage = () => {
         }}
       >
         {tab === '1' && <SeatContainer />}
+        {tab === '2' && <RoomContainer />}
       </Layout>
     </Layout>
   );

@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import SignInPage from 'Pages/SignInPage';
 import SignUpPage from 'Pages/SignUpPage';
 import UserPage from 'Pages/UserPage';
-import { Route, Routes } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 
 const App = () => {
   return (
