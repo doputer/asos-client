@@ -21,7 +21,14 @@ const UserPage = () => {
   const { Sider } = Layout;
 
   const [tab, setTab] = useState('1');
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+  const [broken, setBroken] = useState(true);
+
+  const handleCollapsed = (collapsed: boolean) => {
+    if (!broken) return;
+
+    setCollapsed(collapsed);
+  };
 
   const handleLogout = () => {
     removeCookie('access_token');
@@ -38,21 +45,23 @@ const UserPage = () => {
         breakpoint="xs"
         collapsedWidth="0"
         onBreakpoint={broken => {
-          console.log(broken);
+          setBroken(broken);
         }}
         onCollapse={collapsed => {
-          setCollapsed(collapsed);
+          handleCollapsed(collapsed);
         }}
         collapsed={collapsed}
         width={100}
-        style={{ position: 'absolute', height: '100vh', zIndex: 1000 }}
+        style={
+          broken ? { position: 'absolute', height: '100vh', zIndex: 1000 } : {}
+        }
       >
         <Menu
           theme="light"
           defaultSelectedKeys={[tab]}
           onSelect={({ key }) => {
             setTab(key);
-            setCollapsed(true);
+            handleCollapsed(true);
           }}
           style={{
             height: '80%',
