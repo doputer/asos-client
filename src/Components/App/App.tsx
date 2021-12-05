@@ -1,13 +1,15 @@
-import React from 'react';
-import { Route, Routes } from 'react-router';
+import 'antd/dist/antd.css';
 
-import LoginPage from '../../Pages/LoginPage';
+import SignInPage from 'Pages/SignInPage';
+import SignUpPage from 'Pages/SignUpPage';
+import { Route, Routes } from 'react-router';
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<SignInPage />} />
+        <Route path="/signup" element={<SignUpPage />} />
       </Routes>
     </div>
   );

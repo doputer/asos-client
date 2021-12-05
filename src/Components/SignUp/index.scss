@@ -1,0 +1,32 @@
+.signup-form {
+  .signup-label {
+    margin-bottom: 60px;
+
+    .label-border {
+      width: 120%;
+      border-bottom: 4px solid #4895ef;
+    }
+  }
+
+  .input-container {
+    margin-bottom: 60px;
+
+    .signup-input {
+      width: 360px;
+      height: 40px;
+    }
+
+    .select-container {
+      .signup-select {
+        width: 176px;
+        height: 40px;
+      }
+    }
+  }
+
+  .signup-button {
+    width: 360px;
+    height: 40px;
+    margin-bottom: 40px;
+  }
+}
