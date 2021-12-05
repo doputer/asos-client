@@ -1,6 +1,9 @@
 import { Button, Layout, Menu, message, Space } from 'antd';
 import { Logo } from 'Components/Logo';
+import { MyPageContainer } from 'Components/MyPageContainer';
+import { QuestionContainer } from 'Components/QuestionContainer';
 import { RoomContainer } from 'Components/RoomContainer';
+import { SearchContainer } from 'Components/SearchContainer';
 import { SeatContainer } from 'Components/SeatContainer';
 import { removeCookie } from 'Functions/cookie';
 import { useState } from 'react';
@@ -139,6 +142,9 @@ const UserPage = () => {
       >
         {tab === '1' && <SeatContainer />}
         {tab === '2' && <RoomContainer />}
+        {tab === '3' && <SearchContainer />}
+        {tab === '4' && <QuestionContainer />}
+        {tab === '5' && <MyPageContainer />}
       </Layout>
     </Layout>
   );
