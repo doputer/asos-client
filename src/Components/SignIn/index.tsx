@@ -28,8 +28,8 @@ export const SignIn = () => {
         sameSite: 'none',
       });
 
-      message.success('로그인에 성공했습니다.', 1, () => {
-        window.location.href = '/seat';
+      message.success('로그인 되었습니다.', 0.5, () => {
+        window.location.href = '/user';
       });
     } catch (error: any) {
       message.error(error.message);
