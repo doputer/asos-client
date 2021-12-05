@@ -17,7 +17,11 @@ export const fetchSignIn = async (data: ISignIn) => {
     },
   );
 
-  if (response.status === 200) return;
+  if (response.status === 200) {
+    const { access_token } = await response.json();
+
+    return access_token;
+  }
 
   const { status, message } = await response.json();
 

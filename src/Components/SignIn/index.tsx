@@ -4,6 +4,7 @@ import { Button, Input, message, Space } from 'antd';
 import { fetchSignIn } from 'Functions/fetchSignIn';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { setCookie } from 'Functions/cookie';
 
 export const SignIn = () => {
   const [account, setAccount] = useState({
@@ -19,18 +20,34 @@ export const SignIn = () => {
 
   const handleClick = async () => {
     try {
-      await fetchSignIn(account);
+      const access_token = await fetchSignIn(account);
+
+      setCookie('access_token', access_token, {
+        path: '/',
+        secure: true,
+        sameSite: 'none',
+      });
 
       message.success('로그인에 성공했습니다.', 1, () => {
-        window.location.href = '/';
+        window.location.href = '/seat';
       });
     } catch (error: any) {
       message.error(error.message);
     }
   };
 
+  const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') handleClick();
+  };
+
   return (
-    <Space className="signin-form" direction="vertical">
+    <Space
+      className="signin-form"
+      direction="vertical"
+      onKeyPress={e => {
+        handleEnter(e);
+      }}
+    >
       <div className="flex-column-center signin-label">
         <h1 className="flex-column-center">
           로그인
