@@ -98,7 +98,7 @@ export const BoardContainer = ({ floor }: { floor: IFloor }) => {
         position: 'relative',
       }}
     >
-      <Board board={board} />
+      <Board board={board} setBoard={setBoard} />
     </div>
   );
 };
