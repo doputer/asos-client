@@ -7,6 +7,7 @@ export const SearchContainer = () => {
         <h1
           style={{
             fontSize: '1.75rem',
+            marginBottom: '0px',
           }}
         >
           회원 검색

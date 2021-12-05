@@ -7,6 +7,7 @@ export const QuestionContainer = () => {
         <h1
           style={{
             fontSize: '1.75rem',
+            marginBottom: '0px',
           }}
         >
           문의하기

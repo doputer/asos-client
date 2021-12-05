@@ -67,6 +67,7 @@ export const RoomContainer = () => {
         <h1
           style={{
             fontSize: '1.75rem',
+            marginBottom: '0px',
           }}
         >
           회의실 예약
