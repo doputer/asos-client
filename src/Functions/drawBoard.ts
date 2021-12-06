@@ -3,6 +3,7 @@ import {
   FACILITY,
   RESERVED_SEAT,
   ROOM,
+  SEARCH_SEAT,
   SEAT,
 } from 'Constants/object-type';
 import { IFacility, IRoom, ISeat } from 'Interfaces/IArrangement';
@@ -14,6 +15,7 @@ export const drawBoard = (
   seats: ISeat[],
   rooms: IRoom[],
   facilities: IFacility[],
+  findSeat: ISeat | null = null,
 ) => {
   let board = Array.from({ length: floor.height }, () =>
     Array.from({ length: floor.width }, () => {
@@ -32,7 +34,10 @@ export const drawBoard = (
       };
     else {
       board[seat.y][seat.x] = {
-        type: RESERVED_SEAT,
+        type:
+          seat.x === findSeat?.x && seat.y === findSeat?.y
+            ? SEARCH_SEAT
+            : RESERVED_SEAT,
         id: seat.id,
         name: seat.reservations[0].user.name,
         width: 1,

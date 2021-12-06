@@ -1,5 +1,7 @@
-import { Button, Descriptions } from 'antd';
+import { Button, Descriptions, Modal } from 'antd';
+import { MinimapContainer } from 'Components/MinimapContainer';
 import { fetchReservation } from 'Functions/fetchReservation';
+import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
 import { useEffect, useState } from 'react';
 
@@ -12,24 +14,29 @@ export const UserDescription = ({
   user: IUser;
   changeToggle: () => void;
 }) => {
-  const [seat, setSeat] = useState('');
-  const [room, setRoom] = useState('');
+  const [seat, setSeat] = useState<IReservation>();
+  const [room, setRoom] = useState<IReservation>();
+  const [reservation, setReservation] = useState<IReservation>();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = (reservation: IReservation) => {
+    setReservation(reservation);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   useEffect(() => {
     (async () => {
-      const { seatReservation, roomReservation } = await fetchReservation(
+      const [seatReservation, roomReservation] = await fetchReservation(
         user.id,
       );
 
-      if (seatReservation)
-        setSeat(
-          `${seatReservation?.seat.floor.name} - ${seatReservation?.seat.name}`,
-        );
-
-      if (roomReservation)
-        setRoom(
-          `${roomReservation?.room.floor.name} - ${roomReservation?.room.name}`,
-        );
+      if (seatReservation) setSeat(seatReservation);
+      if (roomReservation) setRoom(roomReservation);
     })();
   }, [user.id]);
 
@@ -60,9 +67,9 @@ export const UserDescription = ({
                 marginRight: '10px',
               }}
             >
-              {seat}
+              {`${seat.seat.floor.name} - ${seat.seat.name}`}
             </span>
-            <Button type="ghost" shape="round">
+            <Button type="ghost" shape="round" onClick={() => showModal(seat)}>
               위치 보기
             </Button>
           </Descriptions.Item>
@@ -82,6 +89,24 @@ export const UserDescription = ({
           </Descriptions.Item>
         )}
       </Descriptions>
+      {reservation && (
+        <Modal
+          title={`위치 (${reservation.seat.floor.name} - ${reservation.seat.name})`}
+          visible={isModalVisible}
+          cancelButtonProps={undefined}
+          onCancel={handleCancel}
+          centered
+          bodyStyle={{
+            overflow: 'auto',
+            height: '480px',
+            margin: '8px',
+            padding: '0px',
+          }}
+          footer={null}
+        >
+          <MinimapContainer reservation={reservation} />
+        </Modal>
+      )}
     </>
   );
 };

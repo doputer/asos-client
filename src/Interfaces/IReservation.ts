@@ -7,7 +7,7 @@ export interface IReservation {
   endTime: Date;
   topic?: string;
   status: number;
-  seat?: ISeat;
-  room?: IRoom;
+  seat: ISeat;
+  room: IRoom;
   user: IUser;
 }
