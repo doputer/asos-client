@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export const SeatContainer = () => {
   const [floors] = useFloors();
-  const [floor, setFloor] = useState();
+  const [floor, setFloor] = useState<IFloor>();
 
   const { Option } = Select;
 

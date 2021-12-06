@@ -1,10 +1,10 @@
 import { Table, Tag } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import useRooms from 'Hooks/useRooms';
-import { IRoom } from 'Interfaces/IRoom';
+import { IRoom } from 'Interfaces/IArrangement';
 import { useEffect, useState } from 'react';
 
-interface IRoomRow {
+interface IRow {
   key: number;
   floor: string;
   name: string;
@@ -14,11 +14,11 @@ interface IRoomRow {
 
 export const RoomContainer = () => {
   const [rooms] = useRooms();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IRow[]>([]);
 
   useEffect(() => {
     setData(
-      rooms.map((room: IRoom): IRoomRow => {
+      rooms.map((room: IRoom): IRow => {
         return {
           key: room.id,
           floor: room.floor.name,
@@ -43,15 +43,14 @@ export const RoomContainer = () => {
       title: '인원',
       dataIndex: 'max',
       sorter: {
-        compare: (a: IRoomRow, b: IRoomRow) => a.max - b.max,
+        compare: (a: IRow, b: IRow) => a.max - b.max,
       },
     },
     {
       title: '상태',
       dataIndex: 'tag',
       sorter: {
-        compare: (a: IRoomRow, b: IRoomRow) =>
-          parseInt(a.tag) - parseInt(b.tag),
+        compare: (a: IRow, b: IRow) => parseInt(a.tag) - parseInt(b.tag),
       },
       render: (tag: string) => (
         <Tag color="green" key={tag}>
@@ -88,7 +87,7 @@ export const RoomContainer = () => {
             columns={columns}
             dataSource={data}
             pagination={false}
-            onRow={(record: IRoomRow) => {
+            onRow={(record: IRow) => {
               return {
                 onClick: () => {
                   window.location.href = `/rooms/${record.key}`;

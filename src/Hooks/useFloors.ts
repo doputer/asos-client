@@ -1,7 +1,10 @@
+import { IFloor } from 'Interfaces/IFloor';
 import { useCallback, useEffect, useState } from 'react';
 
-const useFloors = (): any => {
-  const [data, setData] = useState([]);
+type RetrunTypes = [IFloor[]];
+
+const useFloors = (): RetrunTypes => {
+  const [data, setData] = useState<IFloor[]>([]);
 
   const fetchFloors = useCallback(async () => {
     const response = await fetch(
@@ -24,7 +27,7 @@ const useFloors = (): any => {
     fetchFloors();
   }, [fetchFloors]);
 
-  return [data, fetchFloors];
+  return [data];
 };
 
 export default useFloors;

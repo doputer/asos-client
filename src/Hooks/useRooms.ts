@@ -1,7 +1,10 @@
+import { IRoom } from 'Interfaces/IArrangement';
 import { useCallback, useEffect, useState } from 'react';
 
-const useRooms = (): any => {
-  const [data, setData] = useState([]);
+type RetrunTypes = [IRoom[]];
+
+const useRooms = (): RetrunTypes => {
+  const [data, setData] = useState<IRoom[]>([]);
 
   const fetchRooms = useCallback(async () => {
     const response = await fetch(
@@ -24,7 +27,7 @@ const useRooms = (): any => {
     fetchRooms();
   }, [fetchRooms]);
 
-  return [data, fetchRooms];
+  return [data];
 };
 
 export default useRooms;
