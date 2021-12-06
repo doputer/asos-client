@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Empty, Table } from 'antd';
 import { IUser } from 'Interfaces/IUser';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
@@ -50,13 +50,23 @@ export const UserTable = ({
 
   return (
     <Table
-      scroll={{ y: 'table-body' }}
       size="middle"
       tableLayout="fixed"
       columns={columns}
       dataSource={rows}
       pagination={false}
       sticky
+      locale={{
+        emptyText: (
+          <Empty
+            description={
+              <div>
+                <span style={{ color: '#4895ef' }}>회원</span>을 검색해주세요.
+              </div>
+            }
+          />
+        ),
+      }}
       onRow={(record: IRow) => {
         return {
           onClick: () => {
