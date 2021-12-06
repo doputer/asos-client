@@ -23,6 +23,7 @@ export const SearchBar = () => {
         size="large"
         onSearch={(name: string) => {
           if (!name) return;
+          setToggle(false);
 
           fetchUsers(name);
         }}

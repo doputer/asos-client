@@ -7,7 +7,7 @@ export const QuestionContainer = () => {
         background: '#fff',
       }}
     >
-      <Header style={{ paddingLeft: 24, backgroundColor: 'transparent' }}>
+      <Header style={{ paddingLeft: 12, backgroundColor: 'transparent' }}>
         <h1
           style={{
             fontSize: '1.75rem',
@@ -17,7 +17,7 @@ export const QuestionContainer = () => {
           문의하기
         </h1>
       </Header>
-      <Content style={{ margin: '24px' }}>
+      <Content style={{ margin: '12px' }}>
         <div
           style={{
             width: '100%',
