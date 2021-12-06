@@ -1,28 +1,25 @@
-import { Content, Header } from 'antd/lib/layout/layout';
+import './index.scss';
+
+import Layout, { Content, Header } from 'antd/lib/layout/layout';
+import { SearchBar } from 'Components/SearchBar';
 
 export const SearchContainer = () => {
   return (
-    <>
-      <Header style={{ paddingLeft: 24, backgroundColor: 'transparent' }}>
-        <h1
+    <Layout className="search-container">
+      <Header className="container-header">
+        <h1 className="header-title">회원 검색</h1>
+      </Header>
+      <Content className="container-content">
+        <div
+          className="content-cover"
           style={{
-            fontSize: '1.75rem',
-            marginBottom: '0px',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          회원 검색
-        </h1>
-      </Header>
-      <Content style={{ margin: '24px' }}>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'yellowgreen',
-            borderRadius: '8px',
-          }}
-        ></div>
+          <SearchBar />
+        </div>
       </Content>
-    </>
+    </Layout>
   );
 };

@@ -148,17 +148,13 @@ const UserPage = () => {
           </Button>
         </Space>
       </Sider>
-      <Layout
-        style={{
-          backgroundColor: '#fff',
-        }}
-      >
+      <>
         {tab === '1' && <SeatContainer />}
         {tab === '2' && <RoomContainer />}
         {tab === '3' && <SearchContainer />}
         {tab === '4' && <QuestionContainer />}
         {tab === '5' && <MyPageContainer />}
-      </Layout>
+      </>
     </Layout>
   );
 };

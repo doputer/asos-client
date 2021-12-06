@@ -1,5 +1,7 @@
+import './index.scss';
+
 import { Table, Tag } from 'antd';
-import { Content, Header } from 'antd/lib/layout/layout';
+import Layout, { Content, Header } from 'antd/lib/layout/layout';
 import useRooms from 'Hooks/useRooms';
 import { IRoom } from 'Interfaces/IArrangement';
 import { useEffect, useState } from 'react';
@@ -14,10 +16,10 @@ interface IRow {
 
 export const RoomContainer = () => {
   const [rooms] = useRooms();
-  const [data, setData] = useState<IRow[]>([]);
+  const [rows, setRows] = useState<IRow[]>([]);
 
   useEffect(() => {
-    setData(
+    setRows(
       rooms.map((room: IRoom): IRow => {
         return {
           key: room.id,
@@ -61,31 +63,17 @@ export const RoomContainer = () => {
   ];
 
   return (
-    <>
-      <Header style={{ paddingLeft: 24, backgroundColor: 'transparent' }}>
-        <h1
-          style={{
-            fontSize: '1.75rem',
-            marginBottom: '0px',
-          }}
-        >
-          회의실 예약
-        </h1>
+    <Layout className="room-container">
+      <Header className="container-header">
+        <h1 className="header-title">회의실 예약</h1>
       </Header>
-      <Content style={{ margin: '24px' }}>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '8px',
-            overflow: 'auto',
-          }}
-        >
+      <Content className="container-content">
+        <div className="content-cover">
           <Table
             size="middle"
             tableLayout="fixed"
             columns={columns}
-            dataSource={data}
+            dataSource={rows}
             pagination={false}
             onRow={(record: IRow) => {
               return {
@@ -97,6 +85,6 @@ export const RoomContainer = () => {
           />
         </div>
       </Content>
-    </>
+    </Layout>
   );
 };

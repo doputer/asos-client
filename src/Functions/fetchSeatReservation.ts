@@ -5,7 +5,7 @@ interface ISeatReservation {
   seatId: number;
 }
 
-export const fetchSeatReserve = async (data: ISeatReservation) => {
+export const fetchSeatReservation = async (data: ISeatReservation) => {
   const response = await fetch(
     `${process.env.REACT_APP_SERVER_BASE_URL}/reservations/seat`,
     {

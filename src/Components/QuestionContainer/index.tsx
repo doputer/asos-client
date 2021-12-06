@@ -1,8 +1,12 @@
-import { Content, Header } from 'antd/lib/layout/layout';
+import Layout, { Content, Header } from 'antd/lib/layout/layout';
 
 export const QuestionContainer = () => {
   return (
-    <>
+    <Layout
+      style={{
+        background: '#fff',
+      }}
+    >
       <Header style={{ paddingLeft: 24, backgroundColor: 'transparent' }}>
         <h1
           style={{
@@ -23,6 +27,6 @@ export const QuestionContainer = () => {
           }}
         ></div>
       </Content>
-    </>
+    </Layout>
   );
 };

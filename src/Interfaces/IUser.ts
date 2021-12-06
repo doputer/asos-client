@@ -4,7 +4,7 @@ export interface IUser {
   name: string;
   tel: string;
   role: number;
-  employee_id: string;
+  employeeId: string;
   department: string;
   position: string;
 }

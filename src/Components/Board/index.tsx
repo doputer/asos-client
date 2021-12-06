@@ -6,7 +6,7 @@ import {
   ROOM,
   SEAT,
 } from 'Constants/object-type';
-import { fetchSeatReserve } from 'Functions/fetchSeatReserve';
+import { fetchSeatReservation } from 'Functions/fetchSeatReservation';
 import { ICol } from 'Interfaces/IBoard';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -49,7 +49,7 @@ export const Board = ({ board, setBoard }: PropsTypes): JSX.Element => {
 
   const handleSeatReserve = async (seatId: number) => {
     try {
-      const { seat, user } = await fetchSeatReserve({
+      const { seat, user } = await fetchSeatReservation({
         userId: 201,
         seatId,
       });
