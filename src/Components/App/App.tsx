@@ -1,9 +1,10 @@
 import 'antd/dist/antd.css';
+import './index.scss';
 
 import SignInPage from 'Pages/SignInPage';
 import SignUpPage from 'Pages/SignUpPage';
 import UserPage from 'Pages/UserPage';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 const App = () => {
   return (
