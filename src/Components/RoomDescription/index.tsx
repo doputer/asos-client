@@ -1,6 +1,6 @@
 import { Descriptions } from 'antd';
 
-export const RoomDescription = () => {
+export const RoomDescription = ({ room }: { room: any }) => {
   return (
     <Descriptions
       bordered
@@ -8,9 +8,9 @@ export const RoomDescription = () => {
         marginBottom: '10px',
       }}
     >
-      <Descriptions.Item label="층">{'5층'}</Descriptions.Item>
-      <Descriptions.Item label="이름">{'회의실7'}</Descriptions.Item>
-      <Descriptions.Item label="인원">{'3명'}</Descriptions.Item>
+      <Descriptions.Item label="층">{room.floor}</Descriptions.Item>
+      <Descriptions.Item label="이름">{room.name}</Descriptions.Item>
+      <Descriptions.Item label="인원">{room.max}</Descriptions.Item>
     </Descriptions>
   );
 };

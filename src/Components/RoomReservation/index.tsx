@@ -14,9 +14,11 @@ import { useEffect, useState } from 'react';
 
 import { CheckOutlined, MinusOutlined } from '@ant-design/icons';
 
-export const RoomReservation = () => {
+export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
   const { RangePicker } = DatePicker;
   const { Search } = Input;
+
+  const [topic, setTopic] = useState('');
 
   const [users, fetchUsers] = useSearchUser();
   const [options, setOptions] = useState<any>([]);
@@ -95,16 +97,26 @@ export const RoomReservation = () => {
       <RangePicker
         size="large"
         defaultValue={[
-          moment('2015/01/01', 'YYYY-MM-DD HH:mm'),
-          moment('2015/01/01', 'YYYY-MM-DD HH:mm'),
+          moment(moment(), 'YYYY-MM-DD'),
+          moment(moment(), 'YYYY-MM-DD'),
         ]}
-        format={'YYYY-MM-DD HH:mm'}
+        value={[
+          moment(moment(selectTime.startTime), 'YYYY-MM-DD HH:mm'),
+          moment(moment(selectTime.endTime), 'YYYY-MM-DD HH:mm'),
+        ]}
+        format={['시작 YYYY-MM-DD HH:mm', '종료 YYYY-MM-DD HH:mm']}
         disabled
         style={{
           width: '100%',
         }}
       />
-      <Input size="large" placeholder="회의 주제를 입력해주세요." allowClear />
+      <Input
+        size="large"
+        placeholder="회의 주제를 입력해주세요."
+        allowClear
+        value={topic}
+        onChange={(e: any) => setTopic(e.target.value)}
+      />
 
       <AutoComplete
         onSearch={(name: string) => {
@@ -158,7 +170,7 @@ export const RoomReservation = () => {
           shape="round"
           icon={<CheckOutlined />}
           onClick={() => message.success('예약 되었습니다', 1)}
-          disabled
+          disabled={selectTime.endTime && topic ? false : true}
         >
           예약하기
         </Button>

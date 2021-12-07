@@ -11,7 +11,11 @@ interface IRow {
   tag: string;
 }
 
-export const RoomTable = ({ goNext }: { goNext: () => void }) => {
+export const RoomTable = ({
+  handleRoom,
+}: {
+  handleRoom: (room: IRow) => void;
+}) => {
   const [rooms] = useRooms();
   const [rows, setRows] = useState<IRow[]>([]);
 
@@ -78,7 +82,7 @@ export const RoomTable = ({ goNext }: { goNext: () => void }) => {
         sticky
         onRow={(record: IRow) => {
           return {
-            onClick: () => goNext(),
+            onClick: () => handleRoom(record),
           };
         }}
         scroll={{ y: ref.current?.clientHeight }}

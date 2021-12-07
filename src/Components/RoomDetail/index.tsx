@@ -1,4 +1,4 @@
-import { Button, DatePicker, Descriptions, Space } from 'antd';
+import { Button, DatePicker, Space } from 'antd';
 import { RoomDescription } from 'Components/RoomDescription';
 import { RoomReservation } from 'Components/RoomReservation';
 import { TimeTable } from 'Components/TimeTable';
@@ -9,12 +9,23 @@ import { Transition } from 'react-transition-group';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
-export const RoomDetail = ({ goPrev }: { goPrev: () => void }) => {
+export const RoomDetail = ({
+  goPrev,
+  room,
+}: {
+  goPrev: () => void;
+  room: any;
+}) => {
   const [transitionState, setTransitionState] = useState(true);
 
   const ref = useRef<HTMLDivElement>(null);
 
   const [timeTable, refreshTimeTable] = useTimeTable();
+
+  const [selectTime, setSelectTime] = useState<any>({
+    startTime: '',
+    endTime: '',
+  });
 
   const handleDate = async (date: any) => {
     refreshTimeTable(1, moment(date).format('YYYY-MM-DD'));
@@ -52,7 +63,7 @@ export const RoomDetail = ({ goPrev }: { goPrev: () => void }) => {
             />
             <DatePicker onChange={date => handleDate(date)} />
           </Space>
-          <RoomDescription />
+          <RoomDescription room={room} />
           <div
             style={{
               flex: 1,
@@ -69,7 +80,11 @@ export const RoomDetail = ({ goPrev }: { goPrev: () => void }) => {
               }}
               ref={ref}
             >
-              <TimeTable timeTable={timeTable} tableRef={ref} />
+              <TimeTable
+                timeTable={timeTable}
+                tableHeight={ref.current?.clientHeight}
+                setSelectTime={setSelectTime}
+              />
             </div>
             <div
               style={{
@@ -78,7 +93,7 @@ export const RoomDetail = ({ goPrev }: { goPrev: () => void }) => {
                 flexBasis: '100px',
               }}
             >
-              <RoomReservation />
+              <RoomReservation selectTime={selectTime} />
             </div>
           </div>
         </div>
