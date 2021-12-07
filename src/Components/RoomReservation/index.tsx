@@ -3,6 +3,7 @@ import {
   Avatar,
   Button,
   DatePicker,
+  Empty,
   Input,
   List,
   message,
@@ -13,8 +14,17 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 
 import { CheckOutlined, MinusOutlined } from '@ant-design/icons';
+import { fetchRoomReservation } from 'Functions/fetchRoomReservation';
 
-export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
+export const RoomReservation = ({
+  room,
+  selectTime,
+  refreshTimeTable,
+}: {
+  room: any;
+  selectTime: any;
+  refreshTimeTable: any;
+}) => {
   const { RangePicker } = DatePicker;
   const { Search } = Input;
 
@@ -29,6 +39,37 @@ export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
   useEffect(() => {
     fetchUsers('');
   }, []);
+
+  const clearForm = () => {
+    setParticipants([]);
+    setTopic('');
+  };
+
+  const handleRoomReservation = async (
+    startTime: Date,
+    endTime: Date,
+    topic: string,
+    roomId: number,
+    participantIds: number[],
+  ) => {
+    try {
+      await fetchRoomReservation({
+        startTime,
+        endTime,
+        topic,
+        userId: 201,
+        roomId,
+        participantIds,
+      });
+
+      refreshTimeTable(room.id, moment(startTime).format('YYYY-MM-DD'));
+      clearForm();
+
+      message.success('예약 되었습니다.', 0.5);
+    } catch (error: any) {
+      message.error(error.message);
+    }
+  };
 
   const handleInput = (name: string) => setSearch(name);
 
@@ -91,7 +132,6 @@ export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
       direction="vertical"
       style={{
         width: '100%',
-        // gap: 10, 오류 발생
       }}
     >
       <RangePicker
@@ -134,7 +174,7 @@ export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
         onBlur={() => handleInput('')}
       >
         <Search
-          placeholder="추가하실 회원을 입력해주세요."
+          placeholder="추가하실 참석자를 입력해주세요."
           enterButton="검색"
           size="large"
           allowClear
@@ -142,12 +182,25 @@ export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
       </AutoComplete>
 
       <List
+        bordered
         itemLayout="horizontal"
         dataSource={participants}
+        locale={{
+          emptyText: (
+            <Empty
+              description={
+                <div>
+                  <span style={{ color: '#4895ef' }}>참석자</span>를
+                  추가해주세요.
+                </div>
+              }
+            />
+          ),
+        }}
         renderItem={(item: any, index: number) => (
           <List.Item>
             <List.Item.Meta
-              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+              avatar={<Avatar src="https://i.pravatar.cc/300" />}
               title={<b>{item.name}</b>}
               description={`${item.department} / ${item.position}`}
             />
@@ -169,7 +222,15 @@ export const RoomReservation = ({ selectTime }: { selectTime: any }) => {
           type="primary"
           shape="round"
           icon={<CheckOutlined />}
-          onClick={() => message.success('예약 되었습니다', 1)}
+          onClick={() =>
+            handleRoomReservation(
+              selectTime.startTime,
+              selectTime.endTime,
+              topic,
+              room.key,
+              participants.map((participant: any) => participant.id),
+            )
+          }
           disabled={selectTime.endTime && topic ? false : true}
         >
           예약하기

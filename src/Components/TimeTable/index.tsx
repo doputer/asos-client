@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { message, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 
@@ -34,22 +34,45 @@ export const TimeTable = ({
     setStage(0);
   };
 
+  const handleSelectException = (
+    startIndex: number,
+    endIndex: number = startIndex,
+  ) => {
+    const min = Math.min(startIndex, endIndex);
+    const max = Math.max(startIndex, endIndex);
+
+    for (let i = min; i <= max; i++) {
+      const row = rows.find(row => row.key === i);
+      if (row?.topic !== undefined) throw Error();
+    }
+
+    return;
+  };
+
   const handleSelect = (index: number) => {
-    if (stage === 0) {
-      setSelect({ start: index, end: index });
-      setStage(1);
-    } else if (stage === 1) {
-      if (select.start === index) {
-        clearSelect();
-        return;
-      }
+    try {
+      if (stage === 0) {
+        handleSelectException(index);
 
-      const min = select.start > index ? index : select.start;
-      const max = select.start > index ? select.start : index;
+        setSelect({ start: index, end: index });
+        setStage(1);
+      } else if (stage === 1) {
+        handleSelectException(select.start, index);
 
-      setSelect({ start: min, end: max });
-      setStage(2);
-    } else if (stage === 2) clearSelect();
+        if (select.start === index) {
+          clearSelect();
+          return;
+        }
+
+        const min = Math.min(select.start, index);
+        const max = Math.max(select.start, index);
+
+        setSelect({ start: min, end: max });
+        setStage(2);
+      } else if (stage === 2) clearSelect();
+    } catch (e: any) {
+      message.error('선택할 수 없습니다.');
+    }
   };
 
   useEffect(() => {
@@ -120,12 +143,20 @@ export const TimeTable = ({
         type: 'checkbox',
         renderCell: () => false,
         hideSelectAll: true,
+        getCheckboxProps: (record: any) => {
+          return {
+            disabled: record.topic !== undefined,
+          };
+        },
       }}
       sticky
-      scroll={{ y: tableHeight - 47 }} // 47은 테이블 헤더 높이
+      scroll={{ y: tableHeight - 47 }}
       onRow={(record: IRow) => {
         return {
           onClick: () => handleSelect(record.key),
+          style: {
+            backgroundColor: record.topic !== undefined ? '#fff2f0' : '#fff',
+          },
         };
       }}
     />

@@ -19,7 +19,13 @@ export const RoomTable = ({
   const [rooms] = useRooms();
   const [rows, setRows] = useState<IRow[]>([]);
 
+  const [tableHeight, setTableHeight] = useState(0);
+
   const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) setTableHeight(ref.current.clientHeight);
+  }, [ref.current]);
 
   useEffect(() => {
     setRows(
@@ -85,7 +91,7 @@ export const RoomTable = ({
             onClick: () => handleRoom(record),
           };
         }}
-        scroll={{ y: ref.current?.clientHeight }}
+        scroll={{ y: tableHeight - 47 }}
       />
     </div>
   );

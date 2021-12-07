@@ -9,10 +9,10 @@ import { removeCookie } from 'Functions/cookie';
 import { useState } from 'react';
 
 import {
-  AppstoreFilled,
+  AppstoreOutlined,
+  BuildOutlined,
   LogoutOutlined,
   MessageOutlined,
-  ProfileFilled,
   SearchOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -78,7 +78,7 @@ const UserPage = () => {
           <Menu.Divider dashed={true} />
           <Menu.Item
             key="1"
-            icon={<AppstoreFilled style={{ fontSize: '24px' }} />}
+            icon={<AppstoreOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
             style={{
               margin: '16px 0',
@@ -86,7 +86,7 @@ const UserPage = () => {
           />
           <Menu.Item
             key="2"
-            icon={<ProfileFilled style={{ fontSize: '24px' }} />}
+            icon={<BuildOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
             style={{
               margin: '16px 0',

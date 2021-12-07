@@ -47,7 +47,7 @@ export const Board = ({ board, setBoard }: PropsTypes): JSX.Element => {
 
   const facilityStyle = { width: '100%', height: '100%', opacity: '60%' };
 
-  const handleSeatReserve = async (seatId: number) => {
+  const handleSeatReservation = async (seatId: number) => {
     try {
       const { seat, user } = await fetchSeatReservation({
         userId: 201,
@@ -93,7 +93,7 @@ export const Board = ({ board, setBoard }: PropsTypes): JSX.Element => {
                   placement="top"
                   title={'이 좌석을 예약하시겠습니까?'}
                   onConfirm={() => {
-                    handleSeatReserve(col.id);
+                    handleSeatReservation(col.id);
                   }}
                   okText="네"
                   cancelText="아니오"
