@@ -66,6 +66,16 @@ export const TimeTable = ({
     setSelectTime({ startTime: startRow?.startTime, endTime: endRow?.endTime });
   }, [select]);
 
+  const getParticipants = (user: any = null, participants: any = null) => {
+    if (user === null) return '';
+    if (participants === null) return user.name;
+
+    const participantNames = participants
+      .map((participant: any) => participant.user.name)
+      .join(', ');
+    return user.name + ', ' + participantNames;
+  };
+
   useEffect(() => {
     setRows(
       timeTable.map((time: any, index: number): IRow => {
@@ -74,8 +84,8 @@ export const TimeTable = ({
           time: `${moment(time.start_time).format('HH:mm')} - ${moment(
             time.end_time,
           ).format('HH:mm')}`,
-          topic: '회의 주제',
-          participant: '김도현, 김도현, 김도현, 김도현',
+          topic: time.topic,
+          participant: getParticipants(time.user, time.participants),
           startTime: moment(time.start_time),
           endTime: moment(time.end_time),
         };
