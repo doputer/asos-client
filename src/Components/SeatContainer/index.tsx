@@ -8,10 +8,10 @@ import { IFloor } from 'Interfaces/IFloor';
 import { useState } from 'react';
 
 export const SeatContainer = () => {
+  const { Option } = Select;
+
   const [floors] = useFloors();
   const [floor, setFloor] = useState<IFloor>();
-
-  const { Option } = Select;
 
   return (
     <Layout className="seat-container">
