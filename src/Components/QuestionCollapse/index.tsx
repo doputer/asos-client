@@ -1,9 +1,10 @@
-import { Button, Collapse, Input, Modal, Tag } from 'antd';
+import { Button, Collapse, Divider, Input, message, Modal, Tag } from 'antd';
+import { fetchQuestion } from 'Functions/fetchQuestion';
 import useQuestions from 'Hooks/useQuestions';
+import { IQuestion } from 'Interfaces/IQuestion';
 import { useState } from 'react';
 
 import { FormOutlined } from '@ant-design/icons';
-import { IQuestion } from 'Interfaces/IQuestion';
 
 export const QuestionCollapse = () => {
   const { Panel } = Collapse;
@@ -15,9 +16,7 @@ export const QuestionCollapse = () => {
     message: '',
   });
 
-  const [questions, refreshQuestions] = useQuestions(146);
-
-  console.log(questions);
+  const [questions, refreshQuestions] = useQuestions(201);
 
   const handleInput = (
     e:
@@ -33,11 +32,19 @@ export const QuestionCollapse = () => {
     setVisible(true);
   };
 
-  const handleOk = () => {
-    // setModalText('The modal will be closed after two seconds');
+  const handleOk = async () => {
+    try {
+      await fetchQuestion({ ...question, userId: 201 });
+      await refreshQuestions(201);
+
+      message.success('질문이 생성되었습니다.', 0.5);
+    } catch (error: any) {
+      message.error(error.message);
+    }
   };
 
   const handleCancel = () => {
+    setQuestion({ title: '', message: '' });
     setVisible(false);
   };
 
@@ -78,7 +85,15 @@ export const QuestionCollapse = () => {
               </Tag>
             }
           >
-            <p>{question.title}</p>
+            <h1>질문</h1>
+            <p>{question.message}</p>
+            {question.answer && (
+              <>
+                <Divider />
+                <h1>답변</h1>
+                {question.answer.message}
+              </>
+            )}
           </Panel>
         ))}
       </Collapse>
@@ -103,6 +118,7 @@ export const QuestionCollapse = () => {
             allowClear
             name="title"
             onChange={handleInput}
+            value={question.title}
           />
           <TextArea
             size="large"
@@ -112,6 +128,7 @@ export const QuestionCollapse = () => {
             placeholder="문의 내용을 입력해주세요."
             name="message"
             onChange={handleInput}
+            value={question.message}
           />
         </div>
       </Modal>
