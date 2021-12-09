@@ -156,28 +156,35 @@ export const RoomForm = ({
         width: '100%',
       }}
     >
-      <DatePicker
-        size="large"
-        onChange={date => handleDate(getDate(date))}
-        format="YYYY-MM-DD"
-        defaultValue={getToday()}
+      <div
+        className="flex-center"
         style={{
-          width: '100%',
+          gap: '10px',
         }}
-      />
-      <RangePicker
-        size="large"
-        defaultValue={[getToday(), getToday()]}
-        value={[
-          getMomentFormatDate(selectTime.startTime, 'YYYY-MM-DD HH:mm'),
-          getMomentFormatDate(selectTime.endTime, 'YYYY-MM-DD HH:mm'),
-        ]}
-        format={['시작 YYYY-MM-DD HH:mm', '종료 YYYY-MM-DD HH:mm']}
-        disabled
-        style={{
-          width: '100%',
-        }}
-      />
+      >
+        <DatePicker
+          size="large"
+          onChange={date => handleDate(getDate(date))}
+          format="YYYY-MM-DD"
+          defaultValue={getToday()}
+          style={{
+            flex: 1,
+          }}
+        />
+        <RangePicker
+          size="large"
+          defaultValue={[getToday(), getToday()]}
+          value={[
+            getMomentFormatDate(selectTime.startTime, 'HH:mm'),
+            getMomentFormatDate(selectTime.endTime, 'HH:mm'),
+          ]}
+          format={['시작 HH:mm', '종료 HH:mm']}
+          disabled
+          style={{
+            flex: 2,
+          }}
+        />
+      </div>
       <Input
         size="large"
         placeholder="회의 주제를 입력해주세요."

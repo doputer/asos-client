@@ -21,6 +21,10 @@
   align-items: center;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .page-slide-entering {
   opacity: 0;
   transform: translateX(100%);
