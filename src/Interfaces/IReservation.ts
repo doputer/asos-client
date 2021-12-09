@@ -1,4 +1,5 @@
 import { IRoom, ISeat } from './IArrangement';
+import { IParticipant } from './IParticipant';
 import { IUser } from './IUser';
 
 export interface IReservation {
@@ -10,4 +11,5 @@ export interface IReservation {
   seat: ISeat;
   room: IRoom;
   user: IUser;
+  participants: IParticipant[];
 }

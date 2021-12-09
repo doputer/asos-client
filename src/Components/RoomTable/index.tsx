@@ -1,27 +1,19 @@
-import { Table, Tag } from 'antd';
+import { Table } from 'antd';
 import useRooms from 'Hooks/useRooms';
 import { IRoom } from 'Interfaces/IArrangement';
+import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
 import { useEffect, useRef, useState } from 'react';
-
-interface IRow {
-  key: number;
-  floor: string;
-  name: string;
-  max: string;
-  tag: string;
-}
 
 export const RoomTable = ({
   handleRoom,
 }: {
-  handleRoom: (room: IRow) => void;
+  handleRoom: (room: IRoomRow) => void;
 }) => {
   const [rooms] = useRooms();
-  const [rows, setRows] = useState<IRow[]>([]);
-
-  const [tableHeight, setTableHeight] = useState(0);
+  const [rows, setRows] = useState<IRoomRow[]>([]);
 
   const ref = useRef<HTMLDivElement>(null);
+  const [tableHeight, setTableHeight] = useState(0);
 
   useEffect(() => {
     if (ref.current) setTableHeight(ref.current.clientHeight);
@@ -29,13 +21,12 @@ export const RoomTable = ({
 
   useEffect(() => {
     setRows(
-      rooms.map((room: IRoom): IRow => {
+      rooms.map((room: IRoom): IRoomRow => {
         return {
           key: room.id,
           floor: room.floor.name,
           name: room.name,
           max: `${room.maxUser}명`,
-          tag: '예약 가능',
         };
       }),
     );
@@ -54,20 +45,8 @@ export const RoomTable = ({
       title: '인원',
       dataIndex: 'max',
       sorter: {
-        compare: (a: IRow, b: IRow) => (a.max > b.max ? 1 : -1),
+        compare: (a: IRoomRow, b: IRoomRow) => (a.max > b.max ? 1 : -1),
       },
-    },
-    {
-      title: '상태',
-      dataIndex: 'tag',
-      sorter: {
-        compare: (a: IRow, b: IRow) => parseInt(a.tag) - parseInt(b.tag),
-      },
-      render: (tag: string) => (
-        <Tag color="green" key={tag}>
-          {tag}
-        </Tag>
-      ),
     },
   ];
 
@@ -86,7 +65,7 @@ export const RoomTable = ({
         dataSource={rows}
         pagination={false}
         sticky
-        onRow={(record: IRow) => {
+        onRow={(record: IRoomRow) => {
           return {
             onClick: () => handleRoom(record),
           };

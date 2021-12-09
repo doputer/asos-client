@@ -1,12 +1,19 @@
+import { ITimeTable } from 'Interfaces/ITimeTable';
 import { useCallback, useEffect, useState } from 'react';
 
-type RetrunTypes = [any, any];
+type RetrunTypes = [
+  ITimeTable[],
+  (roomId: number | null, date: string | null) => Promise<void>,
+];
 
-const useTimeTable = (roomId: any = null, date: any = null): RetrunTypes => {
-  const [table, setTable] = useState<any>([]);
+const useTimeTable = (
+  roomId: number | null = null,
+  date: string | null = null,
+): RetrunTypes => {
+  const [table, setTable] = useState<ITimeTable[]>([]);
 
   const fetchTimeTable = useCallback(
-    async (roomId, date) => {
+    async (roomId: number | null, date: string | null) => {
       if (roomId === null || date === null) return;
 
       const response = await fetch(
@@ -22,7 +29,7 @@ const useTimeTable = (roomId: any = null, date: any = null): RetrunTypes => {
       const json = await response.json();
       setTable(json);
     },
-    [name],
+    [roomId, date],
   );
 
   useEffect(() => {

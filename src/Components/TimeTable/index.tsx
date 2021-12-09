@@ -1,28 +1,24 @@
 import { message, Table } from 'antd';
-import moment from 'moment';
+import { getFormatDate } from 'Functions/moment';
+import { IParticipant } from 'Interfaces/IParticipant';
+import { ITimeRange } from 'Interfaces/ITimeRange';
+import { ITimeTable } from 'Interfaces/ITimeTable';
+import { IUser } from 'Interfaces/IUser';
+import { ITimeTableRow } from 'Interfaces/Tables/ITimeTableRow';
 import { useEffect, useState } from 'react';
-
-interface IRow {
-  key: number;
-  time: string;
-  topic: string;
-  participant: string;
-  startTime: any;
-  endTime: any;
-}
 
 export const TimeTable = ({
   timeTable,
-  tableHeight,
+  boxHeight,
   setSelectTime,
 }: {
-  timeTable: any;
-  tableHeight: any;
-  setSelectTime: any;
+  timeTable: ITimeTable[];
+  boxHeight: number;
+  setSelectTime: ({ startTime, endTime }: ITimeRange) => void;
 }) => {
-  const [rows, setRows] = useState<IRow[]>([]);
+  const [rows, setRows] = useState<ITimeTableRow[]>([]);
 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [stage, setStage] = useState(0);
   const [select, setSelect] = useState({
     start: -1,
@@ -79,38 +75,43 @@ export const TimeTable = ({
     setSelectedRowKeys(
       Array.from(
         { length: select.end - select.start + 1 },
-        (_: any, index: any) => select.start + index,
+        (_: number, index: number) => select.start + index,
       ),
     );
 
     const startRow = rows.find(row => row.key === select.start);
     const endRow = rows.find(row => row.key === select.end);
 
-    setSelectTime({ startTime: startRow?.startTime, endTime: endRow?.endTime });
+    if (startRow && endRow)
+      setSelectTime({ startTime: startRow.startTime, endTime: endRow.endTime });
   }, [select]);
 
-  const getParticipants = (user: any = null, participants: any = null) => {
+  const getParticipants = (
+    user: IUser | null = null,
+    participants: IParticipant[] | null = null,
+  ) => {
     if (user === null) return '';
     if (participants === null) return user.name;
 
     const participantNames = participants
-      .map((participant: any) => participant.user.name)
+      .map((participant: IParticipant) => participant.user.name)
       .join(', ');
     return user.name + ', ' + participantNames;
   };
 
   useEffect(() => {
     setRows(
-      timeTable.map((time: any, index: number): IRow => {
+      timeTable.map((time: ITimeTable, index: number): ITimeTableRow => {
         return {
           key: index,
-          time: `${moment(time.start_time).format('HH:mm')} - ${moment(
+          time: `${getFormatDate(time.start_time, 'HH:mm')} - ${getFormatDate(
             time.end_time,
-          ).format('HH:mm')}`,
+            'HH:mm',
+          )}`,
           topic: time.topic,
           participant: getParticipants(time.user, time.participants),
-          startTime: moment(time.start_time),
-          endTime: moment(time.end_time),
+          startTime: time.start_time,
+          endTime: time.end_time,
         };
       }),
     );
@@ -143,15 +144,15 @@ export const TimeTable = ({
         type: 'checkbox',
         renderCell: () => false,
         hideSelectAll: true,
-        getCheckboxProps: (record: any) => {
+        getCheckboxProps: (record: ITimeTableRow) => {
           return {
             disabled: record.topic !== undefined,
           };
         },
       }}
       sticky
-      scroll={{ y: tableHeight - 47 }}
-      onRow={(record: IRow) => {
+      scroll={{ y: boxHeight - 47 }}
+      onRow={(record: ITimeTableRow) => {
         return {
           onClick: () => handleSelect(record.key),
           style: {
