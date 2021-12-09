@@ -18,29 +18,26 @@ export const UserSearch = () => {
 
   return (
     <>
-      <Search
-        placeholder="검색하실 회원 정보를 입력해주세요."
-        enterButton="검색"
-        size="large"
-        onSearch={(name: string) => {
-          if (!name) return;
-          setTab(false);
+      {!tab && (
+        <>
+          <Search
+            placeholder="검색하실 회원 정보를 입력해주세요."
+            enterButton="검색"
+            size="large"
+            onSearch={(name: string) => {
+              if (!name) return;
+              setTab(false);
 
-          fetchUsers(name);
-        }}
-        style={{
-          marginBottom: '10px',
-        }}
-      />
-      <div
-        style={{
-          flex: 1,
-          overflow: 'auto',
-        }}
-      >
-        {!tab && <UserTable users={users} setUser={setUser} goNext={goNext} />}
-        {tab && user && <UserDescription user={user} goPrev={goPrev} />}
-      </div>
+              fetchUsers(name);
+            }}
+            style={{
+              marginBottom: '10px',
+            }}
+          />
+          <UserTable users={users} setUser={setUser} goNext={goNext} />
+        </>
+      )}
+      {tab && user && <UserDescription user={user} goPrev={goPrev} />}
     </>
   );
 };

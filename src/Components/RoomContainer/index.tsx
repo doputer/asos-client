@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export const RoomContainer = () => {
   const [tab, setTab] = useState(false);
-  const [room, setRoom] = useState<any>();
+  const [room, setRoom] = useState<IRoomRow>();
 
   const handleRoom = (room: IRoomRow) => {
     setRoom(room);
@@ -26,7 +26,7 @@ export const RoomContainer = () => {
       <Content className="container-content">
         <div className="content-cover">
           {!tab && <RoomTable handleRoom={handleRoom} />}
-          {tab && <RoomReservation goPrev={goPrev} room={room} />}
+          {tab && room && <RoomReservation goPrev={goPrev} room={room} />}
         </div>
       </Content>
     </Layout>

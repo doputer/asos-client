@@ -1,6 +1,6 @@
 import { Empty, Table } from 'antd';
 import { IUser } from 'Interfaces/IUser';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 interface IRow {
   key: number;
@@ -19,6 +19,13 @@ export const UserTable = ({
   goNext: () => void;
 }) => {
   const [rows, setRows] = useState<IRow[]>([]);
+
+  const ref = useRef<HTMLDivElement>(null);
+  const [tableHeight, setTableHeight] = useState(0);
+
+  useEffect(() => {
+    if (ref.current) setTableHeight(ref.current.clientHeight);
+  }, [ref.current]);
 
   useEffect(() => {
     setRows(
@@ -49,32 +56,41 @@ export const UserTable = ({
   ];
 
   return (
-    <Table
-      size="middle"
-      tableLayout="fixed"
-      columns={columns}
-      dataSource={rows}
-      pagination={false}
-      sticky
-      locale={{
-        emptyText: (
-          <Empty
-            description={
-              <div>
-                <span style={{ color: '#4895ef' }}>회원</span>을 검색해주세요.
-              </div>
-            }
-          />
-        ),
+    <div
+      ref={ref}
+      style={{
+        flex: 1,
+        overflow: 'hidden',
       }}
-      onRow={(record: IRow) => {
-        return {
-          onClick: () => {
-            setUser(users.find(user => user.id === record.key));
-            goNext();
-          },
-        };
-      }}
-    />
+    >
+      <Table
+        size="middle"
+        tableLayout="fixed"
+        columns={columns}
+        dataSource={rows}
+        pagination={false}
+        sticky
+        locale={{
+          emptyText: (
+            <Empty
+              description={
+                <div>
+                  <span style={{ color: '#4895ef' }}>회원</span>을 검색해주세요.
+                </div>
+              }
+            />
+          ),
+        }}
+        onRow={(record: IRow) => {
+          return {
+            onClick: () => {
+              setUser(users.find(user => user.id === record.key));
+              goNext();
+            },
+          };
+        }}
+        scroll={{ y: tableHeight - 47 }}
+      />
+    </div>
   );
 };
