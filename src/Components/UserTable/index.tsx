@@ -12,11 +12,11 @@ interface IRow {
 export const UserTable = ({
   users,
   setUser,
-  changeToggle,
+  goNext,
 }: {
   users: IUser[];
   setUser: Dispatch<SetStateAction<IUser | undefined>>;
-  changeToggle: () => void;
+  goNext: () => void;
 }) => {
   const [rows, setRows] = useState<IRow[]>([]);
 
@@ -71,7 +71,7 @@ export const UserTable = ({
         return {
           onClick: () => {
             setUser(users.find(user => user.id === record.key));
-            changeToggle();
+            goNext();
           },
         };
       }}

@@ -1,7 +1,7 @@
 import './index.scss';
 
 import Layout, { Content, Header } from 'antd/lib/layout/layout';
-import { SearchBar } from 'Components/SearchBar';
+import { UserSearch } from 'Components/UserSearch';
 
 export const SearchContainer = () => {
   return (
@@ -17,7 +17,7 @@ export const SearchContainer = () => {
             flexDirection: 'column',
           }}
         >
-          <SearchBar />
+          <UserSearch />
         </div>
       </Content>
     </Layout>

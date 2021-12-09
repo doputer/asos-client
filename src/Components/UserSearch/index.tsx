@@ -5,15 +5,16 @@ import useSearchUser from 'Hooks/useSearchUser';
 import { IUser } from 'Interfaces/IUser';
 import { useState } from 'react';
 
-export const SearchBar = () => {
+export const UserSearch = () => {
   const { Search } = Input;
 
-  const [toggle, setToggle] = useState(false);
+  const [tab, setTab] = useState(false);
 
   const [users, fetchUsers] = useSearchUser();
   const [user, setUser] = useState<IUser>();
 
-  const changeToggle = () => setToggle(!toggle);
+  const goNext = () => setTab(true);
+  const goPrev = () => setTab(false);
 
   return (
     <>
@@ -23,7 +24,7 @@ export const SearchBar = () => {
         size="large"
         onSearch={(name: string) => {
           if (!name) return;
-          setToggle(false);
+          setTab(false);
 
           fetchUsers(name);
         }}
@@ -37,16 +38,8 @@ export const SearchBar = () => {
           overflow: 'auto',
         }}
       >
-        {!toggle && (
-          <UserTable
-            users={users}
-            setUser={setUser}
-            changeToggle={changeToggle}
-          />
-        )}
-        {toggle && user && (
-          <UserDescription user={user} changeToggle={changeToggle} />
-        )}
+        {!tab && <UserTable users={users} setUser={setUser} goNext={goNext} />}
+        {tab && user && <UserDescription user={user} goPrev={goPrev} />}
       </div>
     </>
   );
