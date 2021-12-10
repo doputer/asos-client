@@ -1,4 +1,3 @@
-import { getCookie } from 'Functions/cookie';
 import { IUser } from 'Interfaces/IUser';
 import {
   Dispatch,
@@ -7,6 +6,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { getCookie } from 'Utils/cookie';
 
 type RetrunTypes = [IUser[], Dispatch<SetStateAction<string>>];
 

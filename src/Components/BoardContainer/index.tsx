@@ -4,12 +4,12 @@ import { getSearchedSeats } from 'Apis/seatApi';
 import { Board } from 'Components/Board';
 import { Spinner } from 'Components/Spin';
 import { getAuth, useUserDispatch, useUserState } from 'Contexts/UserContext';
-import { drawBoard } from 'Functions/drawBoard';
 import useAsync from 'Hooks/useAsync';
 import { IFacility, IRoom, ISeat } from 'Interfaces/IArrangement';
 import { ICol } from 'Interfaces/IBoard';
 import { IFloor } from 'Interfaces/IFloor';
 import { useEffect, useState } from 'react';
+import { drawBoard } from 'Utils/drawBoard';
 
 export const BoardContainer = ({ floor }: { floor: IFloor }) => {
   const { auth } = useUserState();

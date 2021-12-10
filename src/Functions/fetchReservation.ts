@@ -1,5 +1,5 @@
 import { IReservation } from 'Interfaces/IReservation';
-import { Error } from 'Lib/Error';
+import { Error } from 'Utils/error';
 
 type ReturnTypes = [IReservation, IReservation];
 

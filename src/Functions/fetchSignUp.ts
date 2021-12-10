@@ -1,4 +1,4 @@
-import { Error } from 'Lib/Error';
+import { Error } from 'Utils/error';
 
 interface ISignUp {
   email: string;

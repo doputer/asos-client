@@ -4,7 +4,7 @@ import { Button, Input, message, Space } from 'antd';
 import { fetchSignIn } from 'Functions/fetchSignIn';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { setCookie } from 'Functions/cookie';
+import { setCookie } from 'Utils/cookie';
 
 export const SignIn = () => {
   const [account, setAccount] = useState({

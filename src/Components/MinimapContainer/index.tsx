@@ -1,9 +1,9 @@
 import { Minimap } from 'Components/Minimap';
-import { drawBoard } from 'Functions/drawBoard';
 import useArrangement from 'Hooks/useArrangement';
 import { ICol } from 'Interfaces/IBoard';
 import { IReservation } from 'Interfaces/IReservation';
 import { useEffect, useState } from 'react';
+import { drawBoard } from 'Utils/drawBoard';
 
 export const MinimapContainer = ({
   reservation,

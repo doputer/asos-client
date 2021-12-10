@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookie } from 'Functions/cookie';
+import { getCookie } from 'Utils/cookie';
 
 export const getAuth = async () => {
   const access_token = getCookie('access_token');

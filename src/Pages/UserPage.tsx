@@ -5,8 +5,8 @@ import { QuestionContainer } from 'Components/QuestionContainer';
 import { RoomContainer } from 'Components/RoomContainer';
 import { SearchContainer } from 'Components/SearchContainer';
 import { SeatContainer } from 'Components/SeatContainer';
-import { removeCookie } from 'Functions/cookie';
 import { useState } from 'react';
+import { removeCookie } from 'Utils/cookie';
 
 import {
   AppstoreOutlined,
