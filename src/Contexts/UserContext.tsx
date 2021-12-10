@@ -1,17 +1,23 @@
 import * as api from 'Apis/authApi';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-
 import {
   createAsyncDispatcher,
   createAsyncHandler,
   initialAsyncState,
-} from '../Utils/asyncActionUtils';
+} from 'Utils/asyncActionUtils';
 
 /**
  * Interface
  */
+interface Auth {
+  id: number;
+  name: string;
+  email: string;
+  role: number;
+}
+
 interface State {
-  auth: { loading: boolean; data?: string | null; error?: string | null };
+  auth: { loading: boolean; data: Auth; error: string };
 }
 
 interface Action {
@@ -24,7 +30,16 @@ interface Action {
  * Context
  */
 const initialState = {
-  auth: initialAsyncState,
+  auth: {
+    loading: false,
+    data: {
+      id: 0,
+      name: '',
+      email: '',
+      role: 0,
+    },
+    error: '',
+  },
 };
 
 const authHandler = createAsyncHandler('GET_AUTH', 'auth');
@@ -40,7 +55,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
-const UserStateContext = createContext<State>({ ...initialState });
+const UserStateContext = createContext<State>(initialState);
 const UserDispatchContext = createContext<Dispatch<Action>>(() => null);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
