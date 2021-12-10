@@ -4,12 +4,12 @@ import { Button } from 'antd';
 import { RoomDescription } from 'Components/RoomDescription';
 import { RoomForm } from 'Components/RoomForm';
 import { TimeTable } from 'Components/TimeTable';
-import { getFormatDate } from 'Functions/moment';
 import useTimeTable from 'Hooks/useTimeTable';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
 import { useEffect, useRef, useState } from 'react';
 import { Transition } from 'react-transition-group';
+import { getFormatDate } from 'Utils/moment';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 

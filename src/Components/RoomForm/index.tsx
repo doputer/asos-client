@@ -10,16 +10,16 @@ import {
   Space,
 } from 'antd';
 import { fetchRoomReservation } from 'Functions/fetchRoomReservation';
+import useSearchUser from 'Hooks/useSearchUser';
+import { ITimeRange } from 'Interfaces/ITimeRange';
+import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
+import { useEffect, useState } from 'react';
 import {
   getDate,
   getFormatDate,
   getMomentFormatDate,
   getToday,
-} from 'Functions/moment';
-import useSearchUser from 'Hooks/useSearchUser';
-import { ITimeRange } from 'Interfaces/ITimeRange';
-import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
-import { useEffect, useState } from 'react';
+} from 'Utils/moment';
 
 import { CheckOutlined, MinusOutlined } from '@ant-design/icons';
 

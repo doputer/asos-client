@@ -12,7 +12,9 @@ export const MinimapContainer = ({
 }) => {
   const [board, setBoard] = useState<ICol[][]>([]);
 
-  const [seats, rooms, facilities] = useArrangement(reservation.seat.floor.id);
+  const [loading, seats, rooms, facilities] = useArrangement(
+    reservation.seat.floor.id,
+  );
 
   useEffect(() => {
     setBoard(

@@ -1,11 +1,11 @@
 import { message, Table } from 'antd';
-import { getFormatDate } from 'Functions/moment';
 import { IParticipant } from 'Interfaces/IParticipant';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { ITimeTable } from 'Interfaces/ITimeTable';
 import { IUser } from 'Interfaces/IUser';
 import { ITimeTableRow } from 'Interfaces/Tables/ITimeTableRow';
 import { useEffect, useState } from 'react';
+import { getFormatDate } from 'Utils/moment';
 
 export const TimeTable = ({
   timeTable,

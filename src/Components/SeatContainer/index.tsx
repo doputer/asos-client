@@ -2,15 +2,18 @@ import './index.scss';
 
 import { Empty, Select, Space } from 'antd';
 import Layout, { Content, Header } from 'antd/lib/layout/layout';
+import { getFloors } from 'Apis/floorApi';
 import { BoardContainer } from 'Components/BoardContainer';
-import useFloors from 'Hooks/useFloors';
+import useAsync from 'Hooks/useAsync';
 import { IFloor } from 'Interfaces/IFloor';
 import { useState } from 'react';
 
 export const SeatContainer = () => {
   const { Option } = Select;
 
-  const [floors] = useFloors();
+  const [state] = useAsync(getFloors, []);
+  const { loading, data: floors }: { loading: boolean; data: IFloor[] } = state;
+
   const [floor, setFloor] = useState<IFloor>();
 
   return (
@@ -26,12 +29,14 @@ export const SeatContainer = () => {
                 floors.find((floor: IFloor) => floor.id === parseInt(value)),
               );
             }}
+            loading={loading}
           >
-            {floors.map((floor: IFloor) => (
-              <Option value={floor.id} key={floor.id}>
-                {floor.name}
-              </Option>
-            ))}
+            {!loading &&
+              floors.map((floor: IFloor) => (
+                <Option value={floor.id} key={floor.id}>
+                  {floor.name}
+                </Option>
+              ))}
           </Select>
         </Space>
       </Header>
