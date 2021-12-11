@@ -17,16 +17,17 @@ export const MinimapContainer = ({
   );
 
   useEffect(() => {
-    setBoard(
-      drawBoard(
-        reservation.seat.floor,
-        seats,
-        rooms,
-        facilities,
-        reservation.seat,
-      ),
-    );
-  }, [facilities]);
+    if (!loading)
+      setBoard(
+        drawBoard(
+          reservation.seat.floor,
+          seats,
+          rooms,
+          facilities,
+          reservation.seat,
+        ),
+      );
+  }, [loading]);
 
   return (
     <div

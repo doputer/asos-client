@@ -1,6 +1,24 @@
 import axios from 'axios';
 import { getCookie } from 'Utils/cookie';
 
+interface IReservation {
+  userId: number;
+}
+
+export const getSearchedReservation = async (data: IReservation) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/reservations/search?status=1&userId=${data.userId}`,
+    {
+      headers: {
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};
+
 interface ISeatReservation {
   seatId: number;
 }

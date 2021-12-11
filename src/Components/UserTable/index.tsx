@@ -1,4 +1,5 @@
 import { Empty, Table } from 'antd';
+import { Spinner } from 'Components/Spin';
 import { IUser } from 'Interfaces/IUser';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
@@ -10,10 +11,12 @@ interface IRow {
 }
 
 export const UserTable = ({
+  loading,
   users,
   setUser,
   goNext,
 }: {
+  loading: boolean;
   users: IUser[];
   setUser: Dispatch<SetStateAction<IUser | undefined>>;
   goNext: () => void;
@@ -28,17 +31,18 @@ export const UserTable = ({
   }, [ref.current]);
 
   useEffect(() => {
-    setRows(
-      users.map((user: IUser): IRow => {
-        return {
-          key: user.id,
-          name: user.name,
-          department: user.department,
-          position: user.position,
-        };
-      }),
-    );
-  }, [users]);
+    if (users)
+      setRows(
+        users.map((user: IUser): IRow => {
+          return {
+            key: user.id,
+            name: user.name,
+            department: user.department,
+            position: user.position,
+          };
+        }),
+      );
+  }, [loading]);
 
   const columns = [
     {
@@ -66,6 +70,7 @@ export const UserTable = ({
       <Table
         size="middle"
         tableLayout="fixed"
+        loading={loading ? { indicator: <Spinner /> } : false}
         columns={columns}
         dataSource={rows}
         pagination={false}

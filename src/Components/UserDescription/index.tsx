@@ -1,6 +1,7 @@
 import { Button, Descriptions, Modal } from 'antd';
+import { getSearchedReservation } from 'Apis/reservationApi';
 import { MinimapContainer } from 'Components/MinimapContainer';
-import { fetchReservation } from 'Functions/fetchReservation';
+import useAsync from 'Hooks/useAsync';
 import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
 import { useEffect, useState } from 'react';
@@ -17,14 +18,16 @@ export const UserDescription = ({
 }) => {
   const [transitionState, setTransitionState] = useState(true);
 
-  const [seat, setSeat] = useState<IReservation>();
-  const [room, setRoom] = useState<IReservation>();
   const [reservation, setReservation] = useState<IReservation>();
+  const {
+    loading,
+    data: reservations,
+    execute: refetchReservations,
+  } = useAsync(getSearchedReservation);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const showModal = (reservation: IReservation) => {
-    setReservation(reservation);
+  const showModal = () => {
     setIsModalVisible(true);
   };
 
@@ -33,15 +36,12 @@ export const UserDescription = ({
   };
 
   useEffect(() => {
-    (async () => {
-      const [seatReservation, roomReservation] = await fetchReservation(
-        user.id,
-      );
-
-      if (seatReservation) setSeat(seatReservation);
-      if (roomReservation) setRoom(roomReservation);
-    })();
+    refetchReservations({ userId: user.id });
   }, [user.id]);
+
+  useEffect(() => {
+    if (reservations && reservations[0]) setReservation(() => reservations[0]);
+  }, [loading]);
 
   return (
     <Transition
@@ -72,32 +72,28 @@ export const UserDescription = ({
             <Descriptions.Item label="직책">{user.position}</Descriptions.Item>
             <Descriptions.Item label="이메일">{user.email}</Descriptions.Item>
             <Descriptions.Item label="연락처">{user.tel}</Descriptions.Item>
-            {seat && (
+            {reservation?.seat && (
               <Descriptions.Item label="좌석 위치">
                 <span
                   style={{
                     marginRight: '10px',
                   }}
                 >
-                  {`${seat.seat.floor.name} - ${seat.seat.name}`}
+                  {`${reservation.seat.floor.name} - ${reservation.seat.name}`}
                 </span>
-                <Button
-                  type="ghost"
-                  shape="round"
-                  onClick={() => showModal(seat)}
-                >
+                <Button type="ghost" shape="round" onClick={() => showModal()}>
                   위치 보기
                 </Button>
               </Descriptions.Item>
             )}
-            {room && (
+            {reservation?.room && (
               <Descriptions.Item label="회의실 위치">
                 <span
                   style={{
                     marginRight: '10px',
                   }}
                 >
-                  {room}
+                  {`${reservation.room.floor.name} - ${reservation.room.name}`}
                 </span>
                 <Button type="ghost" shape="round">
                   위치 보기
@@ -105,7 +101,7 @@ export const UserDescription = ({
               </Descriptions.Item>
             )}
           </Descriptions>
-          {reservation && (
+          {reservation?.seat && (
             <Modal
               title={`위치 (${reservation.seat.floor.name} - ${reservation.seat.name})`}
               visible={isModalVisible}
