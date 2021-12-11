@@ -8,10 +8,10 @@ export const Logo = ({
   return (
     <>
       {theme === 'white' && (
-        <img src="Assets/Images/Logo-White.svg" alt="" width={width} />
+        <img src="/Assets/Images/Logo-White.svg" alt="" width={width} />
       )}
       {theme === 'cloud' && (
-        <img src="Assets/Images/Logo-Cloud.svg" alt="" width={width} />
+        <img src="/Assets/Images/Logo-Cloud.svg" alt="" width={width} />
       )}
     </>
   );

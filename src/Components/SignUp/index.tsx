@@ -5,6 +5,7 @@ import { Departments } from 'Constants/departments';
 import { Positions } from 'Constants/positions';
 import { fetchSignUp } from 'Functions/fetchSignUp';
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   GlobalOutlined,
@@ -15,6 +16,8 @@ import {
 } from '@ant-design/icons';
 
 export const SignUp = () => {
+  const navigate = useNavigate();
+
   const [register, setRegister] = useState({
     email: '',
     name: '',
@@ -45,9 +48,7 @@ export const SignUp = () => {
     try {
       await fetchSignUp(register);
 
-      message.success('회원 가입에 성공했습니다.', 1, () => {
-        window.location.href = '/';
-      });
+      message.success('회원 가입에 성공했습니다.', 0.5, () => navigate('/'));
     } catch (error) {
       message.error('회원 가입에 실패했습니다.');
     }

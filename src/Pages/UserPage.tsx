@@ -1,11 +1,7 @@
 import { Button, Layout, Menu, message, Space } from 'antd';
 import { Logo } from 'Components/Logo';
-import { MyPageContainer } from 'Components/MyPageContainer';
-import { QuestionContainer } from 'Components/QuestionContainer';
-import { RoomContainer } from 'Components/RoomContainer';
-import { SearchContainer } from 'Components/SearchContainer';
-import { SeatContainer } from 'Components/SeatContainer';
 import { useState } from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { removeCookie } from 'Utils/cookie';
 
 import {
@@ -20,7 +16,19 @@ import {
 const UserPage = () => {
   const { Sider } = Layout;
 
-  const [tab, setTab] = useState('1');
+  const navigate = useNavigate();
+
+  const defaultSelect = () => {
+    const params = useParams();
+    const path = params['*'];
+
+    if (path === 'seat') return ['1'];
+    else if (path === 'room') return ['2'];
+    else if (path === 'search') return ['3'];
+    else if (path === 'question') return ['4'];
+    else if (path === 'mypage') return ['5'];
+  };
+
   const [collapsed, setCollapsed] = useState(false);
   const [broken, setBroken] = useState(true);
 
@@ -33,9 +41,7 @@ const UserPage = () => {
   const handleLogout = () => {
     removeCookie('access_token');
 
-    message.success('로그아웃 되었습니다.', 0.5, () => {
-      window.location.href = '/';
-    });
+    message.success('로그아웃 되었습니다.', 0.5, () => navigate('/'));
   };
 
   return (
@@ -58,11 +64,8 @@ const UserPage = () => {
       >
         <Menu
           theme="light"
-          defaultSelectedKeys={[tab]}
-          onSelect={({ key }) => {
-            setTab(key);
-            handleCollapsed(true);
-          }}
+          defaultSelectedKeys={defaultSelect()}
+          onSelect={() => handleCollapsed(true)}
           style={{
             height: '80%',
           }}
@@ -71,15 +74,13 @@ const UserPage = () => {
             key="0"
             icon={<Logo width="100%" theme="cloud" />}
             className="flex-center"
-            onClick={() => {
-              window.location.href = '/user';
-            }}
           />
           <Menu.Divider dashed={true} />
           <Menu.Item
             key="1"
             icon={<AppstoreOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
+            onClick={() => navigate('/user/seat')}
             style={{
               margin: '16px 0',
             }}
@@ -88,6 +89,7 @@ const UserPage = () => {
             key="2"
             icon={<BuildOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
+            onClick={() => navigate('/user/room')}
             style={{
               margin: '16px 0',
             }}
@@ -96,6 +98,7 @@ const UserPage = () => {
             key="3"
             icon={<SearchOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
+            onClick={() => navigate('/user/search')}
             style={{
               margin: '16px 0',
             }}
@@ -104,6 +107,7 @@ const UserPage = () => {
             key="4"
             icon={<MessageOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
+            onClick={() => navigate('/user/question')}
             style={{
               margin: '16px 0',
             }}
@@ -112,6 +116,7 @@ const UserPage = () => {
             key="5"
             icon={<UserOutlined style={{ fontSize: '24px' }} />}
             className="flex-center"
+            onClick={() => navigate('/user/mypage')}
             style={{
               margin: '16px 0',
             }}
@@ -140,21 +145,14 @@ const UserPage = () => {
               border: 'none',
               boxShadow: 'none',
             }}
-            onClick={() => {
-              handleLogout();
-            }}
+            onClick={() => handleLogout()}
           >
             <LogoutOutlined />
           </Button>
         </Space>
       </Sider>
-      <>
-        {tab === '1' && <SeatContainer />}
-        {tab === '2' && <RoomContainer />}
-        {tab === '3' && <SearchContainer />}
-        {tab === '4' && <QuestionContainer />}
-        {tab === '5' && <MyPageContainer />}
-      </>
+
+      <Outlet />
     </Layout>
   );
 };
