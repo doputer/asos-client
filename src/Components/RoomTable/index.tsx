@@ -1,5 +1,7 @@
 import { Table } from 'antd';
-import useRooms from 'Hooks/useRooms';
+import { getRooms } from 'Apis/roomApi';
+import { Spinner } from 'Components/Spin';
+import useAsync from 'Hooks/useAsync';
 import { IRoom } from 'Interfaces/IArrangement';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +11,7 @@ export const RoomTable = ({
 }: {
   handleRoom: (room: IRoomRow) => void;
 }) => {
-  const [rooms] = useRooms();
+  const { loading, data: rooms = [] } = useAsync(getRooms, [], true);
   const [rows, setRows] = useState<IRoomRow[]>([]);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -20,17 +22,18 @@ export const RoomTable = ({
   }, [ref.current]);
 
   useEffect(() => {
-    setRows(
-      rooms.map((room: IRoom): IRoomRow => {
-        return {
-          key: room.id,
-          floor: room.floor.name,
-          name: room.name,
-          max: `${room.maxUser}명`,
-        };
-      }),
-    );
-  }, [rooms]);
+    rooms &&
+      setRows(
+        rooms.map((room: IRoom): IRoomRow => {
+          return {
+            key: room.id,
+            floor: room.floor.name,
+            name: room.name,
+            max: `${room.maxUser}명`,
+          };
+        }),
+      );
+  }, [loading]);
 
   const columns = [
     {
@@ -61,6 +64,7 @@ export const RoomTable = ({
       <Table
         size="middle"
         tableLayout="fixed"
+        loading={loading ? { indicator: <Spinner /> } : false}
         columns={columns}
         dataSource={rows}
         pagination={false}
