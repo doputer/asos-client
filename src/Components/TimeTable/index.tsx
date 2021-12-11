@@ -1,4 +1,5 @@
 import { message, Table } from 'antd';
+import { Spinner } from 'Components/Spin';
 import { IParticipant } from 'Interfaces/IParticipant';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { ITimeTable } from 'Interfaces/ITimeTable';
@@ -10,10 +11,12 @@ import { getFormatDate } from 'Utils/moment';
 export const TimeTable = ({
   timeTable,
   boxHeight,
+  loading,
   setSelectTime,
 }: {
   timeTable: ITimeTable[];
   boxHeight: number;
+  loading: boolean;
   setSelectTime: ({ startTime, endTime }: ITimeRange) => void;
 }) => {
   const [rows, setRows] = useState<ITimeTableRow[]>([]);
@@ -100,22 +103,23 @@ export const TimeTable = ({
   };
 
   useEffect(() => {
-    setRows(
-      timeTable.map((time: ITimeTable, index: number): ITimeTableRow => {
-        return {
-          key: index,
-          time: `${getFormatDate(time.start_time, 'HH:mm')} - ${getFormatDate(
-            time.end_time,
-            'HH:mm',
-          )}`,
-          topic: time.topic,
-          participant: getParticipants(time.user, time.participants),
-          startTime: time.start_time,
-          endTime: time.end_time,
-        };
-      }),
-    );
-  }, [timeTable]);
+    timeTable &&
+      setRows(
+        timeTable.map((time: ITimeTable, index: number): ITimeTableRow => {
+          return {
+            key: index,
+            time: `${getFormatDate(time.start_time, 'HH:mm')} - ${getFormatDate(
+              time.end_time,
+              'HH:mm',
+            )}`,
+            topic: time.topic,
+            participant: getParticipants(time.user, time.participants),
+            startTime: time.start_time,
+            endTime: time.end_time,
+          };
+        }),
+      );
+  }, [loading]);
 
   const columns = [
     {
@@ -136,6 +140,7 @@ export const TimeTable = ({
     <Table
       size="middle"
       tableLayout="fixed"
+      loading={loading ? { indicator: <Spinner /> } : false}
       columns={columns}
       dataSource={rows}
       pagination={false}

@@ -11,7 +11,7 @@ import {
 } from 'Constants/object-type';
 import useAsync from 'Hooks/useAsync';
 import { ICol } from 'Interfaces/IBoard';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export const Board = ({
   board,
@@ -20,16 +20,10 @@ export const Board = ({
   board: ICol[][];
   refetchSeat: () => void;
 }): JSX.Element => {
-  const [reservation, setReservation] = useState({
-    seatId: 0,
-  });
-  const { error, execute: reserve } = useAsync(
-    () => postSeatReservation(reservation),
-    [reservation],
-  );
+  const { error, execute: reserve } = useAsync(postSeatReservation);
 
   useEffect(() => {
-    message.info('좌석을 선택해주세요.', 1);
+    message.info('좌석을 선택해주세요.', 0.5);
   }, []);
 
   useEffect(() => {
@@ -89,12 +83,7 @@ export const Board = ({
                   okText="네"
                   cancelText="아니오"
                 >
-                  <Button
-                    onClick={() => {
-                      setReservation({ ...reservation, seatId: col.id });
-                    }}
-                    className="flex-center arrangement-button"
-                  >
+                  <Button className="flex-center arrangement-button">
                     {col.name}
                   </Button>
                 </Popconfirm>

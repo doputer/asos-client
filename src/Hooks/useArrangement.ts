@@ -6,15 +6,15 @@ import { IFacility, IRoom, ISeat } from 'Interfaces/IArrangement';
 import { IFloor } from 'Interfaces/IFloor';
 import { useEffect, useState } from 'react';
 
-type ReturnTypes = [
-  boolean,
-  ISeat[],
-  IRoom[],
-  IFacility[],
-  () => void,
-  () => void,
-  () => void,
-];
+type ReturnTypes = {
+  loading: boolean;
+  seats: ISeat[];
+  rooms: IRoom[];
+  facilities: IFacility[];
+  refetchSeat: () => void;
+  refetchRoom: () => void;
+  refetchFacility: () => void;
+};
 
 const useArrangement = (floor: IFloor): ReturnTypes => {
   const [loading, setLoading] = useState(true);
@@ -22,33 +22,51 @@ const useArrangement = (floor: IFloor): ReturnTypes => {
   const {
     loading: loadingSeat,
     data: seats,
-    execute: refetchSeat,
-  } = useAsync(() => getSearchedSeats(floor.id), [floor.id], true);
+    execute: fetchSeat,
+  } = useAsync(getSearchedSeats);
   const {
     loading: loadingRoom,
     data: rooms,
-    execute: refetchRoom,
-  } = useAsync(() => getSearchedRooms(floor.id), [floor.id], true);
+    execute: fetchRoom,
+  } = useAsync(getSearchedRooms);
   const {
     loading: loadingFacility,
     data: facilities,
-    execute: refetchFacility,
-  } = useAsync(() => getSearchedFacilities(floor.id), [floor.id], true);
+    execute: fetchFacility,
+  } = useAsync(getSearchedFacilities);
+
+  const refetch = (() => {
+    return {
+      refetchSeat: () => {
+        fetchSeat(floor.id);
+      },
+      refetchRoom: () => {
+        fetchSeat(floor.id);
+      },
+      refetchFacility: () => {
+        fetchSeat(floor.id);
+      },
+    };
+  })();
+
+  useEffect(() => {
+    fetchSeat(floor.id);
+    fetchRoom(floor.id);
+    fetchFacility(floor.id);
+  }, [floor]);
 
   useEffect(() => {
     if (seats && rooms && facilities) setLoading(() => false);
     else setLoading(() => true);
   }, [loadingSeat, loadingRoom, loadingFacility]);
 
-  return [
+  return {
     loading,
     seats,
     rooms,
     facilities,
-    refetchSeat,
-    refetchRoom,
-    refetchFacility,
-  ];
+    ...refetch,
+  };
 };
 
 export default useArrangement;

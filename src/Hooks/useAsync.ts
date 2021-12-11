@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 
 const initialState = { loading: false, data: null, error: false };
 
@@ -33,31 +33,33 @@ const reducer = (state: any, action: any) => {
 };
 
 const useAsync = (
-  callback: () => any,
-  deps: any[] = [],
+  callback: (...args: any) => Promise<any>,
   immediate = false,
 ): any => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const execute = async () => {
-    dispatch({ type: 'LOADING' });
+  const execute = useCallback(
+    async (...args: any) => {
+      dispatch({ type: 'LOADING' });
 
-    await wait(500);
+      await wait(500);
 
-    try {
-      const data = await callback();
-      dispatch({ type: 'SUCCESS', data });
-      return true;
-    } catch (error: any) {
-      const { status, message } = error.response.data;
-      dispatch({ type: 'ERROR', error: message });
-    }
-  };
+      try {
+        const data = await callback(...args);
+        dispatch({ type: 'SUCCESS', data });
+        return true;
+      } catch (error: any) {
+        const { status, message } = error.response.data;
+        dispatch({ type: 'ERROR', error: message });
+      }
+    },
+    [callback],
+  );
 
   useEffect(() => {
     immediate && execute();
     return () => dispatch({ type: 'CLEAR' });
-  }, deps);
+  }, [immediate, execute]);
 
   return { ...state, execute };
 };

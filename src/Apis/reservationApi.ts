@@ -22,3 +22,29 @@ export const postSeatReservation = async (data: ISeatReservation) => {
 
   return response.data;
 };
+
+interface IRoomReservation {
+  startTime: Date;
+  endTime: Date;
+  topic: string;
+  roomId: number;
+  participantIds: number[];
+}
+
+export const postRoomReservation = async (data: IRoomReservation) => {
+  const access_token = getCookie('access_token');
+
+  const response = await axios.post(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/reservations/room`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};

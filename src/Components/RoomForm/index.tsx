@@ -9,11 +9,13 @@ import {
   message,
   Space,
 } from 'antd';
+import { getSearchedUsers } from 'Apis/userApi';
 import { fetchRoomReservation } from 'Functions/fetchRoomReservation';
-import useSearchUser from 'Hooks/useSearchUser';
+import useAsync from 'Hooks/useAsync';
 import { ITimeRange } from 'Interfaces/ITimeRange';
+import { IUser } from 'Interfaces/IUser';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   getDate,
   getFormatDate,
@@ -22,6 +24,7 @@ import {
 } from 'Utils/moment';
 
 import { CheckOutlined, MinusOutlined } from '@ant-design/icons';
+import { postRoomReservation } from 'Apis/reservationApi';
 
 interface IParticipant {
   id: number;
@@ -49,15 +52,18 @@ export const RoomForm = ({
 
   const [topic, setTopic] = useState('');
 
-  const [users, fetchUsers] = useSearchUser();
+  const {
+    data: users,
+  }: {
+    data: IUser[];
+  } = useAsync(getSearchedUsers, true);
+
   const [options, setOptions] = useState<any>([]);
 
   const [search, setSearch] = useState('');
   const [participants, setParticipants] = useState<IParticipant[]>([]);
 
-  useEffect(() => {
-    fetchUsers('');
-  }, []);
+  const { error, execute: reserve } = useAsync(postRoomReservation);
 
   const clearForm = () => {
     setParticipants([]);
@@ -71,65 +77,61 @@ export const RoomForm = ({
     roomId: number,
     participantIds: number[],
   ) => {
-    try {
-      await fetchRoomReservation({
-        startTime,
-        endTime,
-        topic,
-        userId: 201,
-        roomId,
-        participantIds,
-      });
+    reserve({
+      startTime,
+      endTime,
+      topic,
+      roomId,
+      participantIds,
+    });
 
+    message.success('예약 되었습니다.', 0.5, () => {
       refreshTimeTable(room.key, getFormatDate(startTime, 'YYYY-MM-DD'));
       clearForm();
-
-      message.success('예약 되었습니다.', 0.5);
-    } catch (error: any) {
-      message.error(error.message);
-    }
+    });
   };
 
   const handleInput = (name: string) => setSearch(name);
 
   const handleOption = (name: string) => {
-    setOptions(
-      users
-        .map(user => {
-          if (
-            user.name.includes(name) &&
-            !participants.find(
-              (participant: IParticipant) => participant.id === user.id,
+    users &&
+      setOptions(
+        users
+          .map(user => {
+            if (
+              user.name.includes(name) &&
+              !participants.find(
+                (participant: IParticipant) => participant.id === user.id,
+              )
             )
-          )
-            return {
-              key: user.id,
-              value: user.employeeId,
-              label: (
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: '4px',
-                  }}
-                >
-                  <span>{user.employeeId}</span>
-                  <span>{user.department}</span>
-                  <span
+              return {
+                key: user.id,
+                value: user.employeeId,
+                label: (
+                  <div
                     style={{
-                      color: '#4895ef',
+                      display: 'flex',
+                      gap: '4px',
                     }}
                   >
-                    {user.name}
-                  </span>
-                  <span>{user.position}</span>
-                </div>
-              ),
-            };
+                    <span>{user.employeeId}</span>
+                    <span>{user.department}</span>
+                    <span
+                      style={{
+                        color: '#4895ef',
+                      }}
+                    >
+                      {user.name}
+                    </span>
+                    <span>{user.position}</span>
+                  </div>
+                ),
+              };
 
-          return;
-        })
-        .filter(user => user !== undefined),
-    );
+            return;
+          })
+          .filter(user => user !== undefined),
+      );
   };
 
   const onSelect = (_: string, option: any) => {

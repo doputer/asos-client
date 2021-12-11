@@ -14,11 +14,7 @@ export const SignIn = () => {
     email: '',
     password: '',
   });
-  const {
-    error,
-    data,
-    execute: login,
-  } = useAsync(() => postAuth(account), [account]);
+  const { error, data, execute: login } = useAsync(postAuth);
 
   useEffect(() => {
     if (error) message.error(error, 0.5);

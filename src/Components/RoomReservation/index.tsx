@@ -1,10 +1,11 @@
 import './index.scss';
 
 import { Button } from 'antd';
+import { getRoomTimeTable } from 'Apis/roomApi';
 import { RoomDescription } from 'Components/RoomDescription';
 import { RoomForm } from 'Components/RoomForm';
 import { TimeTable } from 'Components/TimeTable';
-import useTimeTable from 'Hooks/useTimeTable';
+import useAsync from 'Hooks/useAsync';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
 import { useEffect, useRef, useState } from 'react';
@@ -22,7 +23,18 @@ export const RoomReservation = ({
 }) => {
   const [transitionState, setTransitionState] = useState(true);
 
-  const [timeTable, refreshTimeTable] = useTimeTable();
+  const {
+    loading,
+    data: timeTable,
+    execute: refetchTimeTable,
+  } = useAsync(
+    () =>
+      getRoomTimeTable({
+        roomId: room.key,
+        date: getFormatDate(new Date(), 'YYYY-MM-DD'),
+      }),
+    true,
+  );
 
   const [selectTime, setSelectTime] = useState<ITimeRange>({
     startTime: new Date(),
@@ -33,15 +45,14 @@ export const RoomReservation = ({
   const [boxHeight, setBoxHeight] = useState(0);
 
   useEffect(() => {
-    refreshTimeTable(room.key, getFormatDate(new Date(), 'YYYY-MM-DD'));
-  }, []);
-
-  useEffect(() => {
     if (ref.current) setBoxHeight(ref.current.clientHeight);
   }, [ref.current]);
 
   const handleDate = async (date: Date) => {
-    refreshTimeTable(room.key, getFormatDate(date, 'YYYY-MM-DD'));
+    refetchTimeTable({
+      roomId: room.key,
+      date: getFormatDate(date, 'YYYY-MM-DD'),
+    });
   };
 
   return (
@@ -68,6 +79,7 @@ export const RoomReservation = ({
               <TimeTable
                 timeTable={timeTable}
                 boxHeight={boxHeight}
+                loading={loading}
                 setSelectTime={setSelectTime}
               />
             </div>
@@ -76,7 +88,7 @@ export const RoomReservation = ({
                 room={room}
                 selectTime={selectTime}
                 handleDate={handleDate}
-                refreshTimeTable={refreshTimeTable}
+                refreshTimeTable={refetchTimeTable}
               />
             </div>
           </div>

@@ -11,7 +11,7 @@ export const RoomTable = ({
 }: {
   handleRoom: (room: IRoomRow) => void;
 }) => {
-  const { loading, data: rooms = [] } = useAsync(getRooms, [], true);
+  const { loading, data: rooms = [] } = useAsync(getRooms, true);
   const [rows, setRows] = useState<IRoomRow[]>([]);
 
   const ref = useRef<HTMLDivElement>(null);

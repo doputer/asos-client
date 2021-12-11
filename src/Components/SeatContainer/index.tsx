@@ -11,7 +11,7 @@ import { useState } from 'react';
 export const SeatContainer = () => {
   const { Option } = Select;
 
-  const { loading, data: floors = [] } = useAsync(getFloors, [], true);
+  const { loading, data: floors = [] } = useAsync(getFloors, true);
 
   const [selectedFloor, setSelectedFloor] = useState<IFloor>();
 

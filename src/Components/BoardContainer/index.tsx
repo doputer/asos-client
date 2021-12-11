@@ -9,7 +9,7 @@ import { drawBoard } from 'Utils/drawBoard';
 export const BoardContainer = ({ floor }: { floor: IFloor }) => {
   const [board, setBoard] = useState<ICol[][]>([]);
 
-  const [loading, seats, rooms, facilities, refetchSeat] =
+  const { loading, seats, rooms, facilities, refetchSeat } =
     useArrangement(floor);
 
   useEffect(() => {
