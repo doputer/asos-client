@@ -1,6 +1,11 @@
 import { useEffect, useReducer } from 'react';
 
-function reducer(state: any, action: any) {
+const initialState = { loading: false, data: null, error: false };
+
+const wait = (delay: number) =>
+  new Promise(resolve => setTimeout(resolve, delay));
+
+const reducer = (state: any, action: any) => {
   switch (action.type) {
     case 'LOADING':
       return {
@@ -20,39 +25,41 @@ function reducer(state: any, action: any) {
         data: null,
         error: action.error,
       };
+    case 'CLEAR':
+      return initialState;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
-}
+};
 
-function useAsync(callback: () => any, deps: any[] = [], skip = false): any {
-  const [state, dispatch] = useReducer(reducer, {
-    loading: true,
-    data: null,
-    error: false,
-  });
+const useAsync = (
+  callback: () => any,
+  deps: any[] = [],
+  immediate = false,
+): any => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const fetchData = async () => {
+  const execute = async () => {
     dispatch({ type: 'LOADING' });
 
-    setTimeout(async () => {
-      try {
-        const data = await callback();
+    await wait(500);
 
-        dispatch({ type: 'SUCCESS', data });
-      } catch (error: any) {
-        dispatch({ type: 'ERROR', error });
-      }
-    }, 100);
+    try {
+      const data = await callback();
+      dispatch({ type: 'SUCCESS', data });
+      return true;
+    } catch (error: any) {
+      const { status, message } = error.response.data;
+      dispatch({ type: 'ERROR', error: message });
+    }
   };
 
   useEffect(() => {
-    if (skip) return;
-
-    fetchData();
+    immediate && execute();
+    return () => dispatch({ type: 'CLEAR' });
   }, deps);
 
-  return [state, fetchData];
-}
+  return { ...state, execute };
+};
 
 export default useAsync;

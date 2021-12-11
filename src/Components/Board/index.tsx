@@ -13,25 +13,19 @@ import useAsync from 'Hooks/useAsync';
 import { ICol } from 'Interfaces/IBoard';
 import { useEffect, useState } from 'react';
 
-type PropsTypes = {
-  userId: number;
-  board: ICol[][];
-  seatsRefetch: () => void;
-};
-
 export const Board = ({
-  userId,
   board,
-  seatsRefetch,
-}: PropsTypes): JSX.Element => {
+  refetchSeat,
+}: {
+  board: ICol[][];
+  refetchSeat: () => void;
+}): JSX.Element => {
   const [reservation, setReservation] = useState({
-    userId,
     seatId: 0,
   });
-  const [state, refetch] = useAsync(
+  const { error, execute: reserve } = useAsync(
     () => postSeatReservation(reservation),
-    [],
-    true,
+    [reservation],
   );
 
   useEffect(() => {
@@ -39,10 +33,16 @@ export const Board = ({
   }, []);
 
   useEffect(() => {
-    if (state.error) message.error('예약할 수 없습니다.');
-    else if (state.data)
-      message.success('예약 되었습니다.', 0.5, () => seatsRefetch());
-  }, [state]);
+    if (error) message.error(error, 0.5);
+  }, [error]);
+
+  const handleClick = async (seatId: number) => {
+    const result = await reserve({
+      seatId,
+    });
+
+    if (result) message.success('예약 되었습니다.', 0.5, () => refetchSeat());
+  };
 
   const transformLength = (type: number, length: number) => {
     if (type === ROOM) {
@@ -85,7 +85,7 @@ export const Board = ({
                 <Popconfirm
                   placement="top"
                   title={'이 좌석을 예약하시겠습니까?'}
-                  onConfirm={() => refetch()}
+                  onConfirm={() => handleClick(col.id)}
                   okText="네"
                   cancelText="아니오"
                 >

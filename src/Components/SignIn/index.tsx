@@ -1,43 +1,57 @@
 import './index.scss';
 
 import { Button, Input, message, Space } from 'antd';
-import { fetchSignIn } from 'Functions/fetchSignIn';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { postAuth } from 'Apis/authApi';
+import useAsync from 'Hooks/useAsync';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { setCookie } from 'Utils/cookie';
 
 export const SignIn = () => {
+  const navigate = useNavigate();
+
   const [account, setAccount] = useState({
     email: '',
     password: '',
   });
+  const {
+    error,
+    data,
+    execute: login,
+  } = useAsync(() => postAuth(account), [account]);
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
+  useEffect(() => {
+    if (error) message.error(error, 0.5);
+  }, [error]);
 
-    setAccount({ ...account, [name]: value });
-  };
-
-  const handleClick = async () => {
-    try {
-      const access_token = await fetchSignIn(account);
+  useEffect(() => {
+    if (data) {
+      const access_token = data;
 
       setCookie('access_token', access_token, {
         path: '/',
         secure: true,
         sameSite: 'none',
       });
-
-      message.success('로그인 되었습니다.', 0.5, () => {
-        window.location.href = '/user';
-      });
-    } catch (error: any) {
-      message.error(error.message);
     }
+  }, [data]);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setAccount({ ...account, [name]: value });
   };
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') handleClick();
+  const handleClick = async () => {
+    const result = await login(account);
+
+    if (result)
+      message.success('로그인 되었습니다.', 0.5, () => {
+        navigate('/user');
+      });
+  };
+
+  const handleEnter = async (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') await handleClick();
   };
 
   return (
@@ -78,9 +92,7 @@ export const SignIn = () => {
         type="primary"
         size="large"
         className="signin-button"
-        onClick={() => {
-          handleClick();
-        }}
+        onClick={() => handleClick()}
       >
         로그인
       </Button>

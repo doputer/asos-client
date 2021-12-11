@@ -17,3 +17,17 @@ export const getAuth = async () => {
 
   return response.data;
 };
+
+interface ILogin {
+  email: string;
+  password: string;
+}
+
+export const postAuth = async (data: ILogin) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/auth`,
+    data,
+  );
+
+  return response.data;
+};

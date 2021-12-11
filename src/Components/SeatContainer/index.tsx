@@ -11,10 +11,10 @@ import { useState } from 'react';
 export const SeatContainer = () => {
   const { Option } = Select;
 
-  const [state] = useAsync(getFloors, []);
-  const { loading, data: floors }: { loading: boolean; data: IFloor[] } = state;
+  const { loading, data: floors = [] }: { loading: boolean; data: IFloor[] } =
+    useAsync(getFloors, [], true);
 
-  const [floor, setFloor] = useState<IFloor>();
+  const [selectedFloor, setSelectedFloor] = useState<IFloor>();
 
   return (
     <Layout className="seat-container">
@@ -25,13 +25,13 @@ export const SeatContainer = () => {
             size="large"
             defaultValue="층"
             onChange={value => {
-              setFloor(
+              setSelectedFloor(
                 floors.find((floor: IFloor) => floor.id === parseInt(value)),
               );
             }}
             loading={loading}
           >
-            {!loading &&
+            {floors !== null &&
               floors.map((floor: IFloor) => (
                 <Option value={floor.id} key={floor.id}>
                   {floor.name}
@@ -41,12 +41,12 @@ export const SeatContainer = () => {
         </Space>
       </Header>
       <Content className="container-content">
-        {floor && (
+        {selectedFloor && (
           <div className="content-cover">
-            <BoardContainer floor={floor} />
+            <BoardContainer floor={selectedFloor} />
           </div>
         )}
-        {!floor && (
+        {!selectedFloor && (
           <div className="content-cover-empty flex-column-center">
             <Empty
               description={

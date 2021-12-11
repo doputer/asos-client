@@ -1,55 +1,43 @@
-import * as api from 'Apis/authApi';
 import React, { createContext, Dispatch, useContext, useReducer } from 'react';
-import {
-  createAsyncDispatcher,
-  createAsyncHandler,
-  initialAsyncState,
-} from 'Utils/asyncActionUtils';
 
 /**
  * Interface
  */
-interface Auth {
+type User = {
   id: number;
   name: string;
   email: string;
   role: number;
-}
+};
 
-interface State {
-  auth: { loading: boolean; data: Auth; error: string };
-}
+type State = {
+  user: User | null;
+};
 
-interface Action {
-  type: 'GET_AUTH' | 'GET_AUTH_SUCCESS' | 'GET_AUTH_ERROR';
-  data?: string;
-  error?: string;
-}
+type Action = { type: 'LOGIN'; user: User } | { type: 'LOGOUT' };
 
 /**
  * Context
  */
 const initialState = {
-  auth: {
-    loading: false,
-    data: {
-      id: 0,
-      name: '',
-      email: '',
-      role: 0,
-    },
-    error: '',
+  user: {
+    id: 0,
+    name: '',
+    email: '',
+    role: 0,
   },
 };
 
-const authHandler = createAsyncHandler('GET_AUTH', 'auth');
-
 function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'GET_AUTH':
-    case 'GET_AUTH_SUCCESS':
-    case 'GET_AUTH_ERROR':
-      return authHandler(state, action);
+    case 'LOGIN':
+      return {
+        user: action.user,
+      };
+    case 'LOGOUT':
+      return {
+        user: null,
+      };
     default:
       throw new Error(`Unhandled action type`);
   }
@@ -75,18 +63,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
 export function useUserState(): State {
   const state = useContext(UserStateContext);
-  if (!state) {
-    throw new Error('Cannot find UserProvider');
-  }
+  if (!state) throw new Error('Cannot find UserProvider');
+
   return state;
 }
 
 export function useUserDispatch(): Dispatch<Action> {
   const dispatch = useContext(UserDispatchContext);
-  if (!dispatch) {
-    throw new Error('Cannot find UserProvider');
-  }
+  if (!dispatch) throw new Error('Cannot find UserProvider');
+
   return dispatch;
 }
-
-export const getAuth = createAsyncDispatcher('GET_AUTH', api.getAuth);

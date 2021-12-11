@@ -1,47 +1,54 @@
 import { getSearchedFacilities } from 'Apis/facilityApi';
 import { getSearchedRooms } from 'Apis/roomApi';
 import { getSearchedSeats } from 'Apis/seatApi';
+import useAsync from 'Hooks/useAsync';
 import { IFacility, IRoom, ISeat } from 'Interfaces/IArrangement';
+import { IFloor } from 'Interfaces/IFloor';
+import { useEffect, useState } from 'react';
 
-import useAsync from './useAsync';
+type ReturnTypes = [
+  boolean,
+  ISeat[],
+  IRoom[],
+  IFacility[],
+  () => void,
+  () => void,
+  () => void,
+];
 
-type ReturnTypes = [boolean, ISeat[], IRoom[], IFacility[], () => void];
-
-const useArrangement = (floorId: number): ReturnTypes => {
-  const [seatsState, refreshSeats] = useAsync(
-    () => getSearchedSeats(floorId),
-    [floorId],
-  );
-  const [roomsState, refreshRooms] = useAsync(
-    () => getSearchedRooms(floorId),
-    [floorId],
-  );
-  const [facilitiesState, refreshFacilities] = useAsync(
-    () => getSearchedFacilities(floorId),
-    [floorId],
-  );
+const useArrangement = (floor: IFloor): ReturnTypes => {
+  const [loading, setLoading] = useState(true);
 
   const {
-    loading: seatLoading,
+    loading: loadingSeat,
     data: seats,
-  }: { loading: boolean; data: ISeat[] } = seatsState;
+    execute: refetchSeat,
+  } = useAsync(() => getSearchedSeats(floor.id), [floor.id], true);
   const {
-    loading: roomLoading,
+    loading: loadingRoom,
     data: rooms,
-  }: { loading: boolean; data: IRoom[] } = roomsState;
+    execute: refetchRoom,
+  } = useAsync(() => getSearchedRooms(floor.id), [floor.id], true);
   const {
-    loading: facilityLoading,
+    loading: loadingFacility,
     data: facilities,
-  }: { loading: boolean; data: IFacility[] } = facilitiesState;
+    execute: refetchFacility,
+  } = useAsync(() => getSearchedFacilities(floor.id), [floor.id], true);
 
-  const loading = seatLoading && roomLoading && facilityLoading;
-  const refreshArrangement = () => {
-    refreshSeats();
-    refreshRooms();
-    refreshFacilities();
-  };
+  useEffect(() => {
+    if (seats && rooms && facilities) setLoading(() => false);
+    else setLoading(() => true);
+  }, [loadingSeat, loadingRoom, loadingFacility]);
 
-  return [loading, seats, rooms, facilities, refreshArrangement];
+  return [
+    loading,
+    seats,
+    rooms,
+    facilities,
+    refetchSeat,
+    refetchRoom,
+    refetchFacility,
+  ];
 };
 
 export default useArrangement;
