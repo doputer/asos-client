@@ -26,7 +26,7 @@ export const SignIn = () => {
 
   useEffect(() => {
     if (data) {
-      const access_token = data;
+      const { access_token } = data;
 
       setCookie('access_token', access_token, {
         path: '/',
