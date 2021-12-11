@@ -1,8 +1,9 @@
 import { Button, Collapse, Divider, Input, message, Modal, Tag } from 'antd';
-import { fetchQuestion } from 'Functions/fetchQuestion';
-import useQuestions from 'Hooks/useQuestions';
+import { getSearchedQuestions, postQuestion } from 'Apis/questionApi';
+import { Spinner } from 'Components/Spin';
+import useAsync from 'Hooks/useAsync';
 import { IQuestion } from 'Interfaces/IQuestion';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { FormOutlined } from '@ant-design/icons';
 
@@ -16,7 +17,18 @@ export const QuestionCollapse = () => {
     message: '',
   });
 
-  const [questions, refreshQuestions] = useQuestions(201);
+  const { data: questions, execute: refetchQuestions } =
+    useAsync(getSearchedQuestions);
+
+  const { error, execute: sendQuestion } = useAsync(postQuestion);
+
+  useEffect(() => {
+    refetchQuestions(201);
+  }, []);
+
+  useEffect(() => {
+    if (error) message.error(error, 0.5);
+  }, [error]);
 
   const handleInput = (
     e:
@@ -28,19 +40,17 @@ export const QuestionCollapse = () => {
     setQuestion({ ...question, [name]: value });
   };
 
-  const showModal = () => {
-    setVisible(true);
-  };
+  const showModal = () => setVisible(true);
+  const hideMoal = () => setVisible(false);
 
   const handleOk = async () => {
-    try {
-      await fetchQuestion({ ...question, userId: 201 });
-      await refreshQuestions(201);
+    const result = await sendQuestion({ ...question });
 
-      message.success('질문이 생성되었습니다.', 0.5);
-    } catch (error: any) {
-      message.error(error.message);
-    }
+    if (result)
+      message.success('질문이 생성되었습니다.', 0.5, () => {
+        refetchQuestions(201);
+        hideMoal();
+      });
   };
 
   const handleCancel = () => {
@@ -67,36 +77,40 @@ export const QuestionCollapse = () => {
       >
         문의하기
       </Button>
-      <Collapse
-        defaultActiveKey={[]}
-        style={{
-          width: '100%',
-          height: 'fit-content',
-          overflow: 'auto',
-        }}
-      >
-        {questions.map((question: IQuestion) => (
-          <Panel
-            header={question.title}
-            key={question.id}
-            extra={
-              <Tag color={question.status === 0 ? '#f50' : '#108ee9'}>
-                {question.status === 0 ? '답변 대기 중' : '답변 완료'}
-              </Tag>
-            }
-          >
-            <h1>질문</h1>
-            <p>{question.message}</p>
-            {question.answer && (
-              <>
-                <Divider />
-                <h1>답변</h1>
-                {question.answer.message}
-              </>
-            )}
-          </Panel>
-        ))}
-      </Collapse>
+      {questions ? (
+        <Collapse
+          defaultActiveKey={[]}
+          style={{
+            width: '100%',
+            height: 'fit-content',
+            overflow: 'auto',
+          }}
+        >
+          {questions.map((question: IQuestion) => (
+            <Panel
+              header={question.title}
+              key={question.id}
+              extra={
+                <Tag color={question.status === 0 ? '#f50' : '#108ee9'}>
+                  {question.status === 0 ? '답변 대기 중' : '답변 완료'}
+                </Tag>
+              }
+            >
+              <h1>질문</h1>
+              <p>{question.message}</p>
+              {question.answer && (
+                <>
+                  <Divider />
+                  <h1>답변</h1>
+                  {question.answer.message}
+                </>
+              )}
+            </Panel>
+          ))}
+        </Collapse>
+      ) : (
+        <Spinner />
+      )}
       <Modal
         title="문의하기"
         visible={visible}

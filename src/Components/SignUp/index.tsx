@@ -1,10 +1,11 @@
 import './index.scss';
 
 import { Button, Input, message, Select, Space } from 'antd';
+import { postUser } from 'Apis/userApi';
 import { Departments } from 'Constants/departments';
 import { Positions } from 'Constants/positions';
-import { fetchSignUp } from 'Functions/fetchSignUp';
-import { useRef, useState } from 'react';
+import useAsync from 'Hooks/useAsync';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -16,7 +17,15 @@ import {
 } from '@ant-design/icons';
 
 export const SignUp = () => {
+  const { Option } = Select;
+
   const navigate = useNavigate();
+
+  const { error, execute: signup } = useAsync(postUser);
+
+  useEffect(() => {
+    if (error) message.error('회원 가입에 실패했습니다.', 0.5);
+  }, [error]);
 
   const [register, setRegister] = useState({
     email: '',
@@ -45,16 +54,11 @@ export const SignUp = () => {
       return;
     }
 
-    try {
-      await fetchSignUp(register);
+    const result = await signup(register);
 
+    if (result)
       message.success('회원 가입에 성공했습니다.', 0.5, () => navigate('/'));
-    } catch (error) {
-      message.error('회원 가입에 실패했습니다.');
-    }
   };
-
-  const { Option } = Select;
 
   return (
     <Space className="signup-form" direction="vertical">
