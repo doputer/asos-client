@@ -27,14 +27,14 @@ export const RoomReservation = ({
     loading,
     data: timeTable,
     execute: refetchTimeTable,
-  } = useAsync(
-    () =>
-      getRoomTimeTable({
-        roomId: room.key,
-        date: getFormatDate(new Date(), 'YYYY-MM-DD'),
-      }),
-    true,
-  );
+  } = useAsync(getRoomTimeTable);
+
+  useEffect(() => {
+    refetchTimeTable({
+      roomId: room.key,
+      date: getFormatDate(new Date(), 'YYYY-MM-DD'),
+    });
+  }, []);
 
   const [selectTime, setSelectTime] = useState<ITimeRange>({
     startTime: new Date(),

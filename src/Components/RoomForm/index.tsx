@@ -9,13 +9,13 @@ import {
   message,
   Space,
 } from 'antd';
+import { postRoomReservation } from 'Apis/reservationApi';
 import { getSearchedUsers } from 'Apis/userApi';
-import { fetchRoomReservation } from 'Functions/fetchRoomReservation';
 import useAsync from 'Hooks/useAsync';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { IUser } from 'Interfaces/IUser';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getDate,
   getFormatDate,
@@ -24,7 +24,6 @@ import {
 } from 'Utils/moment';
 
 import { CheckOutlined, MinusOutlined } from '@ant-design/icons';
-import { postRoomReservation } from 'Apis/reservationApi';
 
 interface IParticipant {
   id: number;
@@ -42,10 +41,13 @@ export const RoomForm = ({
   room: IRoomRow;
   selectTime: ITimeRange;
   handleDate: (date: Date) => void;
-  refreshTimeTable: (
-    roomId: number | null,
-    date: string | null,
-  ) => Promise<void>;
+  refreshTimeTable: ({
+    roomId,
+    date,
+  }: {
+    roomId: number;
+    date: string;
+  }) => Promise<void>;
 }) => {
   const { RangePicker } = DatePicker;
   const { Search } = Input;
@@ -65,6 +67,10 @@ export const RoomForm = ({
 
   const { error, execute: reserve } = useAsync(postRoomReservation);
 
+  useEffect(() => {
+    if (error) message.error(error, 0.5);
+  }, [error]);
+
   const clearForm = () => {
     setParticipants([]);
     setTopic('');
@@ -77,7 +83,7 @@ export const RoomForm = ({
     roomId: number,
     participantIds: number[],
   ) => {
-    reserve({
+    const result = reserve({
       startTime,
       endTime,
       topic,
@@ -85,10 +91,14 @@ export const RoomForm = ({
       participantIds,
     });
 
-    message.success('예약 되었습니다.', 0.5, () => {
-      refreshTimeTable(room.key, getFormatDate(startTime, 'YYYY-MM-DD'));
-      clearForm();
-    });
+    if (result)
+      message.success('예약 되었습니다.', 0.5, () => {
+        refreshTimeTable({
+          roomId: room.key,
+          date: getFormatDate(startTime, 'YYYY-MM-DD'),
+        });
+        clearForm();
+      });
   };
 
   const handleInput = (name: string) => setSearch(name);
