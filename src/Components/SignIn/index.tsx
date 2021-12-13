@@ -42,7 +42,7 @@ export const SignIn = () => {
 
     if (result)
       message.success('로그인 되었습니다.', 0.5, () => {
-        navigate('/user');
+        navigate('/user/seat');
       });
   };
 

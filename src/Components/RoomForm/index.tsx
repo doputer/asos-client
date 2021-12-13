@@ -182,6 +182,7 @@ export const RoomForm = ({
           style={{
             flex: 1,
           }}
+          allowClear={false}
         />
         <RangePicker
           size="large"

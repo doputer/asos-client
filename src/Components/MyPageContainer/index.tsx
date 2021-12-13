@@ -1,31 +1,18 @@
+import './index.scss';
+
 import Layout, { Content, Header } from 'antd/lib/layout/layout';
+import { PasswordForm } from 'Components/PasswordForm';
 
 export const MyPageContainer = () => {
   return (
-    <Layout
-      style={{
-        background: '#fff',
-      }}
-    >
-      <Header style={{ paddingLeft: 12, backgroundColor: 'transparent' }}>
-        <h1
-          style={{
-            fontSize: '1.75rem',
-            marginBottom: '0px',
-          }}
-        >
-          내정보
-        </h1>
+    <Layout className="mypage-container">
+      <Header className="container-header">
+        <h1 className="header-title">내정보</h1>
       </Header>
-      <Content style={{ margin: '12px' }}>
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'yellowgreen',
-            borderRadius: '8px',
-          }}
-        ></div>
+      <Content className="container-content">
+        <div className="flex-center content-cover">
+          <PasswordForm />
+        </div>
       </Content>
     </Layout>
   );
