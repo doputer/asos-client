@@ -1,0 +1,43 @@
+.sidebar {
+  .ant-layout-sider-children {
+    display: flex;
+    flex-direction: column;
+
+    .sidebar-logo {
+      height: 50px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .sidebar-menu {
+      flex: 1;
+
+      .ant-menu-item {
+        &:hover {
+          color: #4895ef;
+        }
+      }
+
+      .ant-menu-item-selected {
+        background-color: #fff;
+      }
+
+      .ant-menu-item-icon {
+        font-size: 24px;
+      }
+    }
+
+    .sidebar-footer {
+      width: 100%;
+      height: 100px;
+      color: #fff;
+      background-color: #4895ef;
+      border-right: 1px solid #f0f0f0;
+
+      .logout-button {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+      }
+    }
+  }
+}
