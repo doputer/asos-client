@@ -25,7 +25,7 @@ export const RoomCard = () => {
 
   return (
     <Card
-      className="seat-card card-cover"
+      className="room-card card-cover"
       bordered
       title={<h1 className="card-title">회의실 예약</h1>}
       size="small"

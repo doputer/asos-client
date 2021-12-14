@@ -4,7 +4,7 @@ import './index.scss';
 import { MyPageContainer } from 'Components/MyPageContainer';
 import { QuestionContainer } from 'Components/QuestionContainer';
 import { RoomCard } from 'Components/RoomCard';
-import { SearchContainer } from 'Components/SearchContainer';
+import { SearchCard } from 'Components/SearchCard';
 import { SeatCard } from 'Components/SeatCard';
 import { UserProvider } from 'Contexts/UserContext';
 import SignInPage from 'Pages/SignInPage';
@@ -21,7 +21,7 @@ const App = () => {
         <Route path="/user/*" element={<UserPage />}>
           <Route path="seat" element={<SeatCard />} />
           <Route path="room" element={<RoomCard />} />
-          <Route path="search" element={<SearchContainer />} />
+          <Route path="search" element={<SearchCard />} />
           <Route path="question" element={<QuestionContainer />} />
           <Route path="mypage" element={<MyPageContainer />} />
         </Route>

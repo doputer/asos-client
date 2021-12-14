@@ -8,7 +8,7 @@ import { ITimeTableRow } from 'Interfaces/Tables/ITimeTableRow';
 import { useEffect, useState } from 'react';
 import { getFormatDate } from 'Utils/moment';
 
-export const TimeTable = ({
+export const RoomTimeTable = ({
   timeTable,
   boxHeight,
   loading,
