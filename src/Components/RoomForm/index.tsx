@@ -7,7 +7,6 @@ import {
   Input,
   List,
   message,
-  Space,
 } from 'antd';
 import { postRoomReservation } from 'Apis/reservationApi';
 import { getSearchedUsers } from 'Apis/userApi';
@@ -35,11 +34,13 @@ interface IParticipant {
 export const RoomForm = ({
   room,
   selectTime,
+  boxHeight,
   handleDate,
   refreshTimeTable,
 }: {
   room: IRoomRow;
   selectTime: ITimeRange;
+  boxHeight: number;
   handleDate: (date: Date) => void;
   refreshTimeTable: ({
     roomId,
@@ -162,15 +163,18 @@ export const RoomForm = ({
   };
 
   return (
-    <Space
-      direction="vertical"
+    <div
+      className="flex-column"
       style={{
         width: '100%',
+        height: '100%',
+        gap: '10px',
       }}
     >
       <div
         className="flex-center"
         style={{
+          width: '100%',
           gap: '10px',
         }}
       >
@@ -198,77 +202,98 @@ export const RoomForm = ({
           }}
         />
       </div>
-      <Input
-        size="large"
-        placeholder="회의 주제를 입력해주세요."
-        allowClear
-        value={topic}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTopic(e.target.value)
-        }
-      />
 
-      <AutoComplete
-        onSearch={(name: string) => {
-          if (!name) return;
-
-          handleOption(name);
-        }}
-        options={options}
-        onSelect={(value, option) => onSelect(value, option)}
+      <div
         style={{
           width: '100%',
         }}
-        value={search}
-        onChange={(name: string) => handleInput(name)}
-        onBlur={() => handleInput('')}
       >
-        <Search
-          placeholder="추가하실 참석자를 입력해주세요."
-          enterButton="검색"
+        <Input
           size="large"
+          placeholder="회의 주제를 입력해주세요."
           allowClear
+          value={topic}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setTopic(e.target.value)
+          }
         />
-      </AutoComplete>
+      </div>
 
-      <List
-        bordered
-        itemLayout="horizontal"
-        dataSource={participants}
-        locale={{
-          emptyText: (
-            <Empty
-              description={
-                <div>
-                  <span style={{ color: '#4895ef' }}>참석자</span>를
-                  추가해주세요.
-                </div>
-              }
-            />
-          ),
+      <div
+        style={{
+          width: '100%',
         }}
-        renderItem={(participant: IParticipant, index: number) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={<Avatar src="https://i.pravatar.cc/300" />}
-              title={<b>{participant.name}</b>}
-              description={`${participant.department} / ${participant.position}`}
-            />
-            <Button
-              type="default"
-              shape="circle"
-              icon={<MinusOutlined />}
-              onClick={() => {
-                setParticipants(
-                  participants.filter(
-                    (_: IParticipant, i: number) => i !== index,
-                  ),
-                );
-              }}
-            />
-          </List.Item>
-        )}
-      />
+      >
+        <AutoComplete
+          onSearch={(name: string) => {
+            if (!name) return;
+            handleOption(name);
+          }}
+          options={options}
+          onSelect={(value, option) => onSelect(value, option)}
+          style={{
+            width: '100%',
+          }}
+          value={search}
+          onChange={(name: string) => handleInput(name)}
+          onBlur={() => handleInput('')}
+        >
+          <Search
+            placeholder="추가하실 참석자를 입력해주세요."
+            enterButton="검색"
+            size="large"
+            allowClear
+          />
+        </AutoComplete>
+      </div>
+
+      <div
+        style={{
+          width: '100%',
+          overflow: 'auto',
+          maxHeight: boxHeight - 200,
+        }}
+      >
+        <List
+          bordered
+          itemLayout="horizontal"
+          dataSource={participants}
+          locale={{
+            emptyText: (
+              <Empty
+                description={
+                  <div>
+                    <span style={{ color: '#4895ef' }}>참석자</span>를
+                    추가해주세요.
+                  </div>
+                }
+              />
+            ),
+          }}
+          renderItem={(participant: IParticipant, index: number) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar src="https://i.pravatar.cc/300" />}
+                title={<b>{participant.name}</b>}
+                description={`${participant.department} / ${participant.position}`}
+              />
+              <Button
+                type="default"
+                shape="circle"
+                icon={<MinusOutlined />}
+                onClick={() => {
+                  setParticipants(
+                    participants.filter(
+                      (_: IParticipant, i: number) => i !== index,
+                    ),
+                  );
+                }}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
+
       <div className="flex-center">
         <Button
           type="primary"
@@ -288,6 +313,6 @@ export const RoomForm = ({
           예약하기
         </Button>
       </div>
-    </Space>
+    </div>
   );
 };

@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { getRoomTimeTable } from 'Apis/roomApi';
 import { RoomDescription } from 'Components/RoomDescription';
 import { RoomForm } from 'Components/RoomForm';
-import { TimeTable } from 'Components/TimeTable';
+import { RoomTimeTable } from 'Components/RoomTimeTable';
 import useAsync from 'Hooks/useAsync';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
@@ -63,7 +63,7 @@ export const RoomReservation = ({
       appear
     >
       {state => (
-        <div className={`page-slide-${state} flex-column room-reservation`}>
+        <div className={`room-reservation page-slide-${state} flex-column`}>
           <div className="reservation-header">
             <Button
               type="default"
@@ -76,7 +76,7 @@ export const RoomReservation = ({
 
           <div className="reservation-content" ref={ref}>
             <div className="content-left">
-              <TimeTable
+              <RoomTimeTable
                 timeTable={timeTable}
                 boxHeight={boxHeight}
                 loading={loading}
@@ -87,6 +87,7 @@ export const RoomReservation = ({
               <RoomForm
                 room={room}
                 selectTime={selectTime}
+                boxHeight={boxHeight}
                 handleDate={handleDate}
                 refreshTimeTable={refetchTimeTable}
               />

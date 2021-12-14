@@ -49,7 +49,7 @@ const useAsync = (
         dispatch({ type: 'SUCCESS', data });
         return true;
       } catch (error: any) {
-        const { status, message } = error.response.data;
+        const { message } = error.response.data;
         dispatch({ type: 'ERROR', error: message });
       }
     },
