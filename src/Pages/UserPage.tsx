@@ -1,5 +1,5 @@
 import { Layout } from 'antd';
-import { ContentContainer } from 'Components/Containers/ContentContainer';
+import { ContentContainer } from 'Components/ContentContainer';
 import { Sidebar } from 'Components/Sidebar';
 import { Outlet } from 'react-router-dom';
 

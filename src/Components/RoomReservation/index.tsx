@@ -63,7 +63,7 @@ export const RoomReservation = ({
       appear
     >
       {state => (
-        <div className={`page-slide-${state} flex-column room-reservation`}>
+        <div className={`room-reservation page-slide-${state} flex-column`}>
           <div className="reservation-header">
             <Button
               type="default"
@@ -87,6 +87,7 @@ export const RoomReservation = ({
               <RoomForm
                 room={room}
                 selectTime={selectTime}
+                boxHeight={boxHeight}
                 handleDate={handleDate}
                 refreshTimeTable={refetchTimeTable}
               />

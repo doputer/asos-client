@@ -4,22 +4,17 @@ import { Spinner } from 'Components/Spin';
 import useAsync from 'Hooks/useAsync';
 import { IRoom } from 'Interfaces/IArrangement';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const RoomTable = ({
+  itemHeight,
   handleRoom,
 }: {
+  itemHeight: number;
   handleRoom: (room: IRoomRow) => void;
 }) => {
   const { loading, data: rooms = [] } = useAsync(getRooms, true);
   const [rows, setRows] = useState<IRoomRow[]>([]);
-
-  const ref = useRef<HTMLDivElement>(null);
-  const [tableHeight, setTableHeight] = useState(0);
-
-  useEffect(() => {
-    if (ref.current) setTableHeight(ref.current.clientHeight);
-  }, [ref.current]);
 
   useEffect(() => {
     rooms &&
@@ -54,28 +49,20 @@ export const RoomTable = ({
   ];
 
   return (
-    <div
-      ref={ref}
-      style={{
-        flex: 1,
-        overflow: 'hidden',
+    <Table
+      size="middle"
+      tableLayout="fixed"
+      loading={loading ? { indicator: <Spinner /> } : false}
+      columns={columns}
+      dataSource={rows}
+      pagination={false}
+      sticky
+      onRow={(record: IRoomRow) => {
+        return {
+          onClick: () => handleRoom(record),
+        };
       }}
-    >
-      <Table
-        size="middle"
-        tableLayout="fixed"
-        loading={loading ? { indicator: <Spinner /> } : false}
-        columns={columns}
-        dataSource={rows}
-        pagination={false}
-        sticky
-        onRow={(record: IRoomRow) => {
-          return {
-            onClick: () => handleRoom(record),
-          };
-        }}
-        scroll={{ y: tableHeight - 47 }}
-      />
-    </div>
+      scroll={{ y: itemHeight - 47 }}
+    />
   );
 };

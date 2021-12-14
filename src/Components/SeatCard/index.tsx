@@ -1,8 +1,6 @@
-import './index.scss';
-
 import { Card, Empty, Select } from 'antd';
 import { getFloors } from 'Apis/floorApi';
-import { BoardContainer } from 'Components/BoardContainer';
+import { SeatBoardCover } from 'Components/SeatBoardCover';
 import useAsync from 'Hooks/useAsync';
 import { IFloor } from 'Interfaces/IFloor';
 import { useState } from 'react';
@@ -41,15 +39,12 @@ export const SeatCard = () => {
       size="small"
       bodyStyle={{
         flex: 1,
+        overflow: 'auto',
       }}
     >
-      {selectedFloor && (
-        <div className="card-item">
-          <BoardContainer floor={selectedFloor} />
-        </div>
-      )}
-      {!selectedFloor && (
-        <div className="card-item flex-center">
+      <div className={`card-item ${!selectedFloor ? 'flex-center' : null}`}>
+        {selectedFloor && <SeatBoardCover floor={selectedFloor} />}
+        {!selectedFloor && (
           <Empty
             description={
               <>
@@ -60,8 +55,8 @@ export const SeatCard = () => {
               </>
             }
           />
-        </div>
-      )}
+        )}
+      </div>
     </Card>
   );
 };

@@ -13,7 +13,7 @@ import useAsync from 'Hooks/useAsync';
 import { ICol } from 'Interfaces/IBoard';
 import { useEffect } from 'react';
 
-export const Board = ({
+export const SeatBoard = ({
   board,
   refetchSeat,
 }: {
