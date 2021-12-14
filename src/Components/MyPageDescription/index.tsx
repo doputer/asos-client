@@ -13,7 +13,7 @@ export const MypageDescription = ({ userId }: { userId: number }) => {
 
   return (
     <>
-      {loading && !user ? (
+      {loading && !user !== null ? (
         <Spinner />
       ) : (
         <Descriptions bordered column={1}>

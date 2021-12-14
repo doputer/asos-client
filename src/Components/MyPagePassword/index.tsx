@@ -1,14 +1,18 @@
-import { Button, Card, Input, message } from 'antd';
-import { getAuth, postAuth } from 'Apis/authApi';
-import { MypageDescription } from 'Components/MyPageDescription';
+import { Button, Input, message } from 'antd';
+import { postAuth } from 'Apis/authApi';
 import useAsync from 'Hooks/useAsync';
-import React, { useEffect, useState } from 'react';
+import { IUser } from 'Interfaces/IUser';
+import { useEffect, useState } from 'react';
 
-export const PasswordForm = () => {
+export const MyPagePassword = ({
+  user,
+  goNext,
+}: {
+  user: IUser;
+  goNext: () => void;
+}) => {
   const [password, setPassword] = useState('');
-  const [tab, setTab] = useState('tab1');
 
-  const { data: user } = useAsync(getAuth, true);
   const { loading, error, execute: login } = useAsync(postAuth);
 
   useEffect(() => {
@@ -18,17 +22,16 @@ export const PasswordForm = () => {
   const handleClick = async () => {
     const result = await login({ email: user.email, password });
 
-    if (result) setTab('tab2');
+    if (result) goNext();
   };
 
   const handleEnter = async (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Enter') await handleClick();
   };
 
-  const tabContents: {
-    [tab: string]: JSX.Element;
-  } = {
-    tab1: (
+  return (
+    <div onKeyDown={e => handleEnter(e)}>
+      <h3>비밀번호 확인</h3>
       <Input.Group
         compact
         size="large"
@@ -51,22 +54,6 @@ export const PasswordForm = () => {
           제출
         </Button>
       </Input.Group>
-    ),
-    tab2: <MypageDescription userId={user?.id} />,
-  };
-
-  return (
-    <Card
-      title={`${tab === 'tab1' ? '비밀번호 확인' : '마이페이지'}`}
-      headStyle={{
-        color: '#fff',
-        backgroundColor: '#4895ef',
-      }}
-      onKeyPress={e => {
-        handleEnter(e);
-      }}
-    >
-      {tabContents[tab]}
-    </Card>
+    </div>
   );
 };

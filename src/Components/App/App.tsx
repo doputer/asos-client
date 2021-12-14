@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
 import './index.scss';
 
-import { MyPageContainer } from 'Components/MyPageContainer';
+import { MyPageCard } from 'Components/MyPageCard';
 import { QuestionCard } from 'Components/QuestionCard';
 import { RoomCard } from 'Components/RoomCard';
 import { SearchCard } from 'Components/SearchCard';
@@ -23,7 +23,7 @@ const App = () => {
           <Route path="room" element={<RoomCard />} />
           <Route path="search" element={<SearchCard />} />
           <Route path="question" element={<QuestionCard />} />
-          <Route path="mypage" element={<MyPageContainer />} />
+          <Route path="mypage" element={<MyPageCard />} />
         </Route>
       </Routes>
     </UserProvider>
