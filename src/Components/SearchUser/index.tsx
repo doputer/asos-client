@@ -2,9 +2,9 @@ import './index.scss';
 
 import { Empty, Input } from 'antd';
 import { getSearchedUsers } from 'Apis/userApi';
+import { SearchUserDescription } from 'Components/SearchUserDescription';
 import { SearchUserTable } from 'Components/SearchUserTable';
 import { Spinner } from 'Components/Spin';
-import { UserDescription } from 'Components/UserDescription';
 import useAsync from 'Hooks/useAsync';
 import { IUser } from 'Interfaces/IUser';
 import { useEffect, useRef, useState } from 'react';
@@ -80,7 +80,7 @@ export const SearchUser = () => {
           </div>
         </div>
       )}
-      {tab && user && <UserDescription user={user} goPrev={goPrev} />}
+      {tab && user && <SearchUserDescription user={user} goPrev={goPrev} />}
     </>
   );
 };

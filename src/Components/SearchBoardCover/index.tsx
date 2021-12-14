@@ -1,11 +1,11 @@
-import { Minimap } from 'Components/Minimap';
+import { SearchBoard } from 'Components/SearchBoard';
 import useArrangement from 'Hooks/useArrangement';
 import { ICol } from 'Interfaces/IBoard';
 import { IReservation } from 'Interfaces/IReservation';
 import { useEffect, useState } from 'react';
 import { drawBoard } from 'Utils/drawBoard';
 
-export const MinimapContainer = ({
+export const SearchBoardCover = ({
   reservation,
 }: {
   reservation: IReservation;
@@ -35,7 +35,7 @@ export const MinimapContainer = ({
         position: 'relative',
       }}
     >
-      <Minimap board={board} />
+      <SearchBoard board={board} />
     </div>
   );
 };

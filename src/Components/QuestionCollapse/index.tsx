@@ -1,82 +1,19 @@
-import { Button, Collapse, Divider, Input, message, Modal, Tag } from 'antd';
-import { getSearchedQuestions, postQuestion } from 'Apis/questionApi';
+import { Collapse, Divider, Tag } from 'antd';
 import { Spinner } from 'Components/Spin';
-import useAsync from 'Hooks/useAsync';
 import { IQuestion } from 'Interfaces/IQuestion';
-import { useEffect, useState } from 'react';
 
-import { FormOutlined } from '@ant-design/icons';
-
-export const QuestionCollapse = () => {
+export const QuestionCollapse = ({ questions }: { questions: IQuestion[] }) => {
   const { Panel } = Collapse;
-  const { TextArea } = Input;
-
-  const [visible, setVisible] = useState(false);
-  const [question, setQuestion] = useState({
-    title: '',
-    message: '',
-  });
-
-  const { data: questions, execute: refetchQuestions } =
-    useAsync(getSearchedQuestions);
-
-  const { error, execute: sendQuestion } = useAsync(postQuestion);
-
-  useEffect(() => {
-    refetchQuestions(201);
-  }, []);
-
-  useEffect(() => {
-    if (error) message.error(error, 0.5);
-  }, [error]);
-
-  const handleInput = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    const { value, name } = e.target;
-
-    setQuestion({ ...question, [name]: value });
-  };
-
-  const showModal = () => setVisible(true);
-  const hideMoal = () => setVisible(false);
-
-  const handleOk = async () => {
-    const result = await sendQuestion({ ...question });
-
-    if (result)
-      message.success('질문이 생성되었습니다.', 0.5, () => {
-        refetchQuestions(201);
-        hideMoal();
-      });
-  };
-
-  const handleCancel = () => {
-    setQuestion({ title: '', message: '' });
-    setVisible(false);
-  };
 
   return (
     <div
       className="flex-column"
       style={{
         width: '100%',
+        height: '100%',
         gap: '10px',
       }}
     >
-      <Button
-        type="primary"
-        shape="round"
-        icon={<FormOutlined />}
-        style={{
-          width: 'fit-content',
-        }}
-        onClick={() => showModal()}
-      >
-        문의하기
-      </Button>
       {questions ? (
         <Collapse
           defaultActiveKey={[]}
@@ -109,43 +46,15 @@ export const QuestionCollapse = () => {
           ))}
         </Collapse>
       ) : (
-        <Spinner />
-      )}
-      <Modal
-        title="문의하기"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="작성하기"
-        cancelText="취소"
-      >
         <div
-          className="flex-column"
+          className="flex-center"
           style={{
-            gap: '10px',
+            height: '100%',
           }}
         >
-          <Input
-            size="large"
-            placeholder="문의 제목을 입력해주세요."
-            maxLength={24}
-            allowClear
-            name="title"
-            onChange={handleInput}
-            value={question.title}
-          />
-          <TextArea
-            size="large"
-            autoSize={{ minRows: 4, maxRows: 10 }}
-            showCount
-            maxLength={300}
-            placeholder="문의 내용을 입력해주세요."
-            name="message"
-            onChange={handleInput}
-            value={question.message}
-          />
+          <Spinner size={72} />
         </div>
-      </Modal>
+      )}
     </div>
   );
 };

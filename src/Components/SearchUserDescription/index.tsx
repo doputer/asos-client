@@ -1,6 +1,6 @@
 import { Button, Descriptions, Modal } from 'antd';
 import { getSearchedReservation } from 'Apis/reservationApi';
-import { MinimapContainer } from 'Components/MinimapContainer';
+import { SearchBoardCover } from 'Components/SearchBoardCover';
 import useAsync from 'Hooks/useAsync';
 import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
@@ -9,7 +9,7 @@ import { Transition } from 'react-transition-group';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
-export const UserDescription = ({
+export const SearchUserDescription = ({
   user,
   goPrev,
 }: {
@@ -116,7 +116,7 @@ export const UserDescription = ({
               }}
               footer={null}
             >
-              <MinimapContainer reservation={reservation} />
+              <SearchBoardCover reservation={reservation} />
             </Modal>
           )}
         </div>

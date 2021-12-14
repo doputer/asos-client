@@ -8,7 +8,7 @@ import {
 } from 'Constants/object-type';
 import { ICol } from 'Interfaces/IBoard';
 
-export const Minimap = ({ board }: { board: ICol[][] }): JSX.Element => {
+export const SearchBoard = ({ board }: { board: ICol[][] }): JSX.Element => {
   const transformLength = (type: number, length: number) => {
     if (type === ROOM) {
       if (length === 0) return `0px`;
