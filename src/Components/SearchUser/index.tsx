@@ -9,9 +9,9 @@ import useAsync from 'Hooks/useAsync';
 import { IUser } from 'Interfaces/IUser';
 import { useEffect, useRef, useState } from 'react';
 
-export const SearchUser = () => {
-  const { Search } = Input;
+const { Search } = Input;
 
+export const SearchUser = () => {
   const [tab, setTab] = useState(false);
 
   const {

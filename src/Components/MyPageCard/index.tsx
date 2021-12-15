@@ -1,6 +1,6 @@
 import { Card } from 'antd';
 import { getAuth } from 'Apis/authApi';
-import { MypageDescription } from 'Components/MyPageDescription';
+import { MyPageDescription } from 'Components/MyPageDescription';
 import { MyPagePassword } from 'Components/MyPagePassword';
 import useAsync from 'Hooks/useAsync';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ export const MyPageCard = () => {
         }}
       >
         {tab === 0 && <MyPagePassword user={user} goNext={goNext} />}
-        {tab === 1 && <MypageDescription userId={user.id} />}
+        {tab === 1 && <MyPageDescription userId={user.id} />}
       </div>
     </Card>
   );
