@@ -36,7 +36,7 @@ export const SearchUserDescription = ({
   };
 
   useEffect(() => {
-    refetchReservations({ userId: user.id });
+    refetchReservations({ status: 1, userId: user.id });
   }, [user.id]);
 
   useEffect(() => {

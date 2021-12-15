@@ -1,4 +1,5 @@
 import { SearchBoard } from 'Components/SearchBoard';
+import { Spinner } from 'Components/Spin';
 import useArrangement from 'Hooks/useArrangement';
 import { ICol } from 'Interfaces/IBoard';
 import { IReservation } from 'Interfaces/IReservation';
@@ -30,12 +31,26 @@ export const SearchBoardCover = ({
   }, [loading]);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-      }}
-    >
-      <SearchBoard board={board} />
-    </div>
+    <>
+      {loading ? (
+        <div
+          className="flex-center"
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <Spinner size={36} />
+        </div>
+      ) : (
+        <div
+          style={{
+            position: 'relative',
+          }}
+        >
+          <SearchBoard board={board} />
+        </div>
+      )}
+    </>
   );
 };
