@@ -1,26 +1,49 @@
-import { Avatar, Button, Card, Divider, Empty, Form, Input, Space } from 'antd';
-import { getSearchedReservation } from 'Apis/reservationApi';
+import {
+  Avatar,
+  Button,
+  Card,
+  Divider,
+  Empty,
+  Form,
+  Input,
+  List,
+  Modal,
+  Space,
+  Tag,
+} from 'antd';
+import {
+  getSearchedAllReservation,
+  getSearchedReservation,
+} from 'Apis/reservationApi';
 import { getUser } from 'Apis/userApi';
 import { SearchBoardCover } from 'Components/SearchBoardCover';
 import { Spinner } from 'Components/Spin';
 import useAsync from 'Hooks/useAsync';
 import { IReservation } from 'Interfaces/IReservation';
 import { useEffect, useState } from 'react';
+import { getFormatDate } from 'Utils/moment';
 
 export const MyPageDescription = ({ userId }: { userId: number }) => {
   const { loading, data: user, execute: refetchUser } = useAsync(getUser);
   const { data: reservations, execute: refetchReservations } = useAsync(
     getSearchedReservation,
   );
+  const { data: allReservations, execute: refetchAllReservations } = useAsync(
+    getSearchedAllReservation,
+  );
 
   const [seatReservation, setSeatReservation] = useState<IReservation>();
   const [roomReservation, setRoomReservation] = useState<IReservation>();
-  const [seatToggle, setSeatToggle] = useState(false);
-  const [roomToggle, setRoomToggle] = useState(false);
+
+  const [seatReservations, setSeatReservations] = useState<IReservation[]>();
+  const [roomReservations, setRoomReservations] = useState<IReservation[]>();
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     refetchUser(userId);
-    refetchReservations({ userId });
+    refetchReservations({ status: 1, userId });
+    refetchAllReservations(userId);
   }, []);
 
   useEffect(() => {
@@ -37,6 +60,24 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
       );
     }
   }, [reservations]);
+
+  useEffect(() => {
+    if (allReservations) {
+      setSeatReservations(
+        allReservations
+          .filter((reservation: IReservation) => reservation.seat !== null)
+          .reverse(),
+      );
+      setRoomReservations(
+        allReservations
+          .filter((reservation: IReservation) => reservation.room !== null)
+          .reverse(),
+      );
+    }
+  }, [allReservations]);
+
+  const showModal = () => setIsModalVisible(true);
+  const handleCancel = () => setIsModalVisible(false);
 
   return (
     <>
@@ -139,14 +180,14 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
                       style={{
                         marginLeft: '10px',
                       }}
-                      onClick={() => setSeatToggle(!seatToggle)}
+                      onClick={() => showModal()}
                     >
                       위치 보기
                     </Button>
                   </Form.Item>
                 )}
                 {roomReservation && (
-                  <Form.Item label="좌석 위치">
+                  <Form.Item label="회의실 위치">
                     {`${roomReservation.room.floor.name} - ${roomReservation.room.name}`}
                     <Button
                       type="ghost"
@@ -165,47 +206,137 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
           </div>
           <div
             style={{
-              flex: 7,
-              border: '1px dashed #c2c2c2',
+              flex: '1 0 auto',
+              border: '1px solid #f0f0f0',
               overflow: 'auto',
               height: '100%',
+              display: 'flex',
             }}
           >
-            {seatToggle ? (
-              <div
-                style={{
-                  minHeight: '360px',
-                }}
-              >
-                {seatReservation && (
-                  <SearchBoardCover reservation={seatReservation} />
-                )}
-              </div>
-            ) : (
-              <div
-                className="flex-center"
-                style={{
-                  height: '100%',
-                }}
-              >
-                <Empty
-                  description={
-                    <>
-                      <div>
-                        <span style={{ color: '#4895ef' }}>좌석</span> 혹은{' '}
-                        <span style={{ color: '#4895ef' }}>회의실</span>의
-                        위치가
-                      </div>
-                      <div>이곳에 나타납니다.</div>
-                    </>
-                  }
+            <List
+              header={<b>좌석 사용 내역</b>}
+              dataSource={seatReservations}
+              renderItem={(reservation: IReservation) => (
+                <List.Item
                   style={{
-                    margin: '36px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
                   }}
-                />
-              </div>
-            )}
+                >
+                  {`${getFormatDate(
+                    reservation.startTime,
+                    'YYYY-MM-DD HH:mm:ss',
+                  )} ~ ${
+                    reservation.endTime
+                      ? getFormatDate(
+                          reservation.endTime,
+                          'YYYY-MM-DD HH:mm:ss',
+                        )
+                      : ''
+                  }`}
+                  <br />
+                  {`${reservation.seat.name} - ${reservation.seat.floor.name}`}
+                  {reservation.status === 1 && (
+                    <Tag color={'#87d068'}>{'사용 중'}</Tag>
+                  )}
+                  {reservation.status === 2 && (
+                    <Tag color={'#108ee9'}>{'사용 완료'}</Tag>
+                  )}
+                </List.Item>
+              )}
+              style={{
+                flex: 1,
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              }}
+            ></List>
           </div>
+          <div
+            style={{
+              flex: '1 0 auto',
+              border: '1px solid #f0f0f0',
+              overflow: 'auto',
+              height: '100%',
+              display: 'flex',
+            }}
+          >
+            <List
+              header={<b>회의실 예약 내역</b>}
+              dataSource={roomReservations}
+              renderItem={(reservation: IReservation) => (
+                <List.Item
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  {`${getFormatDate(
+                    reservation.startTime,
+                    'YYYY-MM-DD HH:mm:ss',
+                  )} ~ ${
+                    reservation.endTime
+                      ? getFormatDate(
+                          reservation.endTime,
+                          'YYYY-MM-DD HH:mm:ss',
+                        )
+                      : ''
+                  }`}
+                  <br />
+                  {`${reservation.room.name} - ${reservation.room.floor.name}`}
+                  {reservation.status === 1 && (
+                    <Tag color={'#87d068'}>{'사용 중'}</Tag>
+                  )}
+                  {reservation.status === 2 && (
+                    <Tag color={'#108ee9'}>{'사용 완료'}</Tag>
+                  )}
+                </List.Item>
+              )}
+              style={{
+                flex: 1,
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              }}
+            ></List>
+          </div>
+          {/* <div
+              className="flex-center"
+              style={{
+                height: '100%',
+              }}
+            >
+              <Empty
+                description={
+                  <>
+                    <div>
+                      <span style={{ color: '#4895ef' }}>좌석</span> 혹은{' '}
+                      <span style={{ color: '#4895ef' }}>회의실</span>의 위치가
+                    </div>
+                    <div>이곳에 나타납니다.</div>
+                  </>
+                }
+                style={{
+                  margin: '36px',
+                }}
+              />
+            </div> */}
+          {seatReservation && (
+            <Modal
+              title={`위치 (${seatReservation.seat.floor.name} - ${seatReservation.seat.name})`}
+              visible={isModalVisible}
+              cancelButtonProps={undefined}
+              onCancel={handleCancel}
+              centered
+              bodyStyle={{
+                overflow: 'auto',
+                height: '480px',
+                margin: '8px',
+                padding: '0px',
+              }}
+              footer={null}
+            >
+              <SearchBoardCover reservation={seatReservation} />
+            </Modal>
+          )}
         </div>
       )}
     </>
