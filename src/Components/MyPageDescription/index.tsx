@@ -4,7 +4,7 @@ import { Spinner } from 'Components/Spin';
 import useAsync from 'Hooks/useAsync';
 import { useEffect } from 'react';
 
-export const MypageDescription = ({ userId }: { userId: number }) => {
+export const MyPageDescription = ({ userId }: { userId: number }) => {
   const { loading, data: user, execute } = useAsync(getUser);
 
   useEffect(() => {

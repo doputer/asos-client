@@ -2,9 +2,9 @@ import { Collapse, Divider, Tag } from 'antd';
 import { Spinner } from 'Components/Spin';
 import { IQuestion } from 'Interfaces/IQuestion';
 
-export const QuestionCollapse = ({ questions }: { questions: IQuestion[] }) => {
-  const { Panel } = Collapse;
+const { Panel } = Collapse;
 
+export const QuestionCollapse = ({ questions }: { questions: IQuestion[] }) => {
   return (
     <div
       className="flex-column"
