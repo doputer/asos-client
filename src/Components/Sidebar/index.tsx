@@ -68,7 +68,7 @@ export const Sidebar = () => {
         broken
           ? {
               position: 'absolute',
-              height: '100vh',
+              height: '100%',
               zIndex: 1000,
               display: 'flex',
             }
