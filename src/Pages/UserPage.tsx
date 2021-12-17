@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 
 const UserPage = () => {
   return (
-    <Layout style={{ height: '100%' }}>
+    <Layout style={{ height: '100vh' }}>
       <Sidebar />
       <ContentContainer>
         <Outlet />
