@@ -42,7 +42,7 @@ const useAsync = (
     async (...args: any) => {
       dispatch({ type: 'LOADING' });
 
-      await wait(500);
+      // await wait(500);
 
       try {
         const data = await callback(...args);

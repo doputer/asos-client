@@ -1,6 +1,6 @@
 import './index.scss';
 
-import { Button, Input, message, Space } from 'antd';
+import { Button, Input, message } from 'antd';
 import { postAuth } from 'Apis/authApi';
 import useAsync from 'Hooks/useAsync';
 import React, { useEffect, useState } from 'react';
@@ -51,9 +51,8 @@ export const SignIn = () => {
   };
 
   return (
-    <Space
-      className="signin-form"
-      direction="vertical"
+    <div
+      className="signin-form flex-column-center"
       onKeyPress={e => {
         handleEnter(e);
       }}
@@ -65,7 +64,7 @@ export const SignIn = () => {
         </h1>
       </div>
 
-      <Space className="input-container" direction="vertical">
+      <div className="input-container flex-column">
         <Input
           size="large"
           className="signin-input"
@@ -82,7 +81,7 @@ export const SignIn = () => {
           value={account.password}
           onChange={handleInput}
         />
-      </Space>
+      </div>
 
       <Button
         type="primary"
@@ -94,10 +93,10 @@ export const SignIn = () => {
       </Button>
 
       <Link to="/signup">
-        <Button type="text" size="large">
+        <Button type="text" size="large" className="signin-button">
           회원가입
         </Button>
       </Link>
-    </Space>
+    </div>
   );
 };

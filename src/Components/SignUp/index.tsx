@@ -61,7 +61,7 @@ export const SignUp = () => {
   };
 
   return (
-    <Space className="signup-form" direction="vertical">
+    <div className="signup-form flex-column">
       <div className="flex-column-center signup-label">
         <h1 className="flex-column-center">
           회원가입
@@ -69,7 +69,7 @@ export const SignUp = () => {
         </h1>
       </div>
 
-      <Space className="input-container" direction="vertical">
+      <div className="input-container flex-column">
         <Input
           addonBefore={<GlobalOutlined />}
           size="large"
@@ -126,11 +126,7 @@ export const SignUp = () => {
           value={register.tel}
           onChange={handleInput}
         />
-        <Space
-          className="select-container"
-          direction="horizontal"
-          align="baseline"
-        >
+        <div className="select-container flex-center-vertical">
           <Select
             className="signup-select"
             size="large"
@@ -159,8 +155,8 @@ export const SignUp = () => {
               </Option>
             ))}
           </Select>
-        </Space>
-      </Space>
+        </div>
+      </div>
 
       <Button
         type="primary"
@@ -172,6 +168,6 @@ export const SignUp = () => {
       >
         회원가입
       </Button>
-    </Space>
+    </div>
   );
 };
