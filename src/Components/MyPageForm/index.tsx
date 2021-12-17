@@ -3,26 +3,50 @@ import './index.scss';
 import { Button, Form, Input } from 'antd';
 import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
+import React, { useEffect } from 'react';
 
 import { ClockCircleOutlined } from '@ant-design/icons';
 
 export const MyPageForm = ({
+  account,
   user,
+  isEdit,
   seatReservation,
   roomReservation,
+  setAccount,
   showSeat,
   showRoom,
   setIsSeatModalVisible,
   setIsRoomModalVisible,
 }: {
+  account: any;
   user: IUser;
+  isEdit: boolean;
   seatReservation: IReservation | undefined;
   roomReservation: IReservation | undefined;
+  setAccount: (value: any) => void;
   showSeat: () => void;
   showRoom: () => void;
   setIsSeatModalVisible: (visible: boolean) => void;
   setIsRoomModalVisible: (visible: boolean) => void;
 }) => {
+  useEffect(() => {
+    setAccount(() => {
+      return {
+        employeeId: user?.employeeId,
+        tel: user?.tel,
+        department: user?.department,
+        position: user?.position,
+      };
+    });
+  }, []);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+
+    setAccount({ ...account, [name]: value });
+  };
+
   return (
     <Form className="mypage-form" layout="horizontal">
       <Form.Item label="이메일">
@@ -31,28 +55,43 @@ export const MyPageForm = ({
       <Form.Item label="비밀번호">
         <Input.Password
           visibilityToggle={false}
-          defaultValue={'00000000'}
-          disabled
-        />
-      </Form.Item>
-      <Form.Item label="비밀번호 확인">
-        <Input.Password
-          visibilityToggle={false}
-          defaultValue={'00000000'}
-          disabled
+          disabled={!isEdit}
+          name="password"
+          value={account.password}
+          onChange={handleInput}
         />
       </Form.Item>
       <Form.Item label="사원번호">
-        <Input defaultValue={user?.employeeId} disabled />
+        <Input
+          disabled={!isEdit}
+          name="employeeId"
+          value={account.employeeId}
+          onChange={handleInput}
+        />
       </Form.Item>
       <Form.Item label="전화번호">
-        <Input defaultValue={user?.tel} disabled />
+        <Input
+          disabled={!isEdit}
+          name="tel"
+          value={account.tel}
+          onChange={handleInput}
+        />
       </Form.Item>
       <Form.Item label="부서">
-        <Input defaultValue={user?.department} disabled />
+        <Input
+          disabled={!isEdit}
+          name="department"
+          value={account.department}
+          onChange={handleInput}
+        />
       </Form.Item>
       <Form.Item label="직책">
-        <Input defaultValue={user?.position} disabled />
+        <Input
+          disabled={!isEdit}
+          name="position"
+          value={account.position}
+          onChange={handleInput}
+        />
       </Form.Item>
       {seatReservation && (
         <Form.Item label="좌석 위치">

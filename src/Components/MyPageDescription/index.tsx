@@ -1,12 +1,12 @@
 import './index.scss';
 
-import { Avatar, Button, Card, Divider, Empty, Space } from 'antd';
+import { Avatar, Button, Card, Divider, Empty, message, Space } from 'antd';
 import { getAuth } from 'Apis/authApi';
 import {
   getSearchedAllReservation,
   getSearchedReservation,
 } from 'Apis/reservationApi';
-import { getUser } from 'Apis/userApi';
+import { getUser, patchUser } from 'Apis/userApi';
 import { MyPageForm } from 'Components/MyPageForm';
 import { MyPageRoomModal } from 'Components/MyPageRoomModal';
 import { MyPageSeatModal } from 'Components/MyPageSeatModal';
@@ -18,12 +18,15 @@ import { useEffect, useState } from 'react';
 
 export const MyPageDescription = ({ userId }: { userId: number }) => {
   const { loading, data: user, execute: refetchUser } = useAsync(getUser);
+  const { execute: updateUser } = useAsync(patchUser);
   const { data: reservations, execute: refetchReservations } = useAsync(
     getSearchedReservation,
   );
   const { data: allReservations, execute: refetchAllReservations } = useAsync(
     getSearchedAllReservation,
   );
+
+  const [isEdit, setIsEdit] = useState(false);
 
   const [seatReservation, setSeatReservation] = useState<IReservation>();
   const [roomReservation, setRoomReservation] = useState<IReservation>();
@@ -83,6 +86,13 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
     }
   }, [allReservations]);
 
+  const [account, setAccount] = useState({
+    employeeId: '',
+    tel: '',
+    department: '',
+    position: '',
+  });
+
   const { data: me } = useAsync(getAuth, true);
 
   return (
@@ -108,17 +118,39 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
                 <span>
                   <b className="header-title">{me?.name}</b>님
                 </span>
-                <Button type="ghost" shape="round">
-                  수정
-                </Button>
+                {isEdit ? (
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    shape="round"
+                    onClick={() => {
+                      setIsEdit(false);
+                      updateUser(me.id, account);
+                      message.success('회원 정보가 수정되었습니다.', 0.5);
+                    }}
+                  >
+                    완료
+                  </Button>
+                ) : (
+                  <Button
+                    type="ghost"
+                    shape="round"
+                    onClick={() => setIsEdit(true)}
+                  >
+                    수정
+                  </Button>
+                )}
               </Space>
 
               <Divider />
 
               <MyPageForm
+                account={account}
                 user={user}
+                isEdit={isEdit}
                 seatReservation={seatReservation}
                 roomReservation={roomReservation}
+                setAccount={setAccount}
                 showSeat={showSeat}
                 showRoom={showRoom}
                 setIsSeatModalVisible={setIsSeatModalVisible}
