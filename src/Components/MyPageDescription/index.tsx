@@ -1,3 +1,5 @@
+import './index.scss';
+
 import { Avatar, Button, Card, Divider, Empty, Space } from 'antd';
 import { getAuth } from 'Apis/authApi';
 import {
@@ -88,35 +90,10 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
       {loading && !user && !reservations !== null ? (
         <Spinner />
       ) : (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '10px',
-          }}
-        >
-          <div
-            style={{
-              flex: '1 0 auto',
-              minWidth: '360px',
-            }}
-          >
-            <Card
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-              }}
-            >
-              <Space
-                style={{
-                  width: '100%',
-                  height: 'inherit',
-                  justifyContent: 'space-evenly',
-                }}
-              >
+        <div className="mypage-description">
+          <div className="left-pane">
+            <Card className="description-card">
+              <Space className="card-header">
                 <Avatar
                   size={{
                     xs: 32, // xs: 24
@@ -129,14 +106,7 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
                   src="https://i.pravatar.cc/500"
                 />
                 <span>
-                  <b
-                    style={{
-                      fontSize: '1.5em',
-                    }}
-                  >
-                    {me?.name}
-                  </b>
-                  님
+                  <b className="header-title">{me?.name}</b>님
                 </span>
                 <Button type="ghost" shape="round">
                   수정
@@ -157,15 +127,7 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
             </Card>
           </div>
 
-          <div
-            style={{
-              flex: '9 0 auto',
-              border: '1px solid #f0f0f0',
-              overflow: 'auto',
-              height: '100%',
-              display: 'flex',
-            }}
-          >
+          <div className="right-pane">
             {isSeatPositionVisible || isRoomPositionVisible ? (
               <>
                 {isSeatPositionVisible && seatReservation && (
@@ -176,13 +138,7 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
                 )}
               </>
             ) : (
-              <div
-                className="flex-center"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              >
+              <div className="empty-pane flex-center">
                 <Empty
                   description={
                     <>

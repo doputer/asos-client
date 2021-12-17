@@ -1,3 +1,5 @@
+import './index.scss';
+
 import { Button, Form, Input } from 'antd';
 import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
@@ -22,7 +24,7 @@ export const MyPageForm = ({
   setIsRoomModalVisible: (visible: boolean) => void;
 }) => {
   return (
-    <Form layout="horizontal">
+    <Form className="mypage-form" layout="horizontal">
       <Form.Item label="이메일">
         <Input defaultValue={user?.email} disabled />
       </Form.Item>
@@ -56,21 +58,17 @@ export const MyPageForm = ({
         <Form.Item label="좌석 위치">
           {`${seatReservation?.seat.floor.name} - ${seatReservation?.seat.name}`}
           <Button
+            className="mypage-form-button"
             type="ghost"
             shape="round"
-            style={{
-              marginLeft: '10px',
-            }}
             onClick={() => showSeat()}
           >
             위치 보기
           </Button>
           <Button
+            className="mypage-form-button"
             type="ghost"
             shape="circle"
-            style={{
-              marginLeft: '10px',
-            }}
             onClick={() => setIsSeatModalVisible(true)}
             icon={<ClockCircleOutlined />}
           />
@@ -81,11 +79,9 @@ export const MyPageForm = ({
           <>
             {`${roomReservation.room.floor.name} - ${roomReservation.room.name}`}
             <Button
+              className="mypage-form-button"
               type="ghost"
               shape="round"
-              style={{
-                marginLeft: '10px',
-              }}
               onClick={() => showRoom()}
             >
               위치 보기
@@ -95,11 +91,9 @@ export const MyPageForm = ({
           '이용중인 회의실이 없습니다.'
         )}
         <Button
+          className="mypage-form-button"
           type="ghost"
           shape="circle"
-          style={{
-            marginLeft: '10px',
-          }}
           onClick={() => setIsRoomModalVisible(true)}
           icon={<ClockCircleOutlined />}
         />
