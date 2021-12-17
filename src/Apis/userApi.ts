@@ -59,3 +59,29 @@ export const postUser = async (data: ISignUp) => {
 
   return response.data;
 };
+
+interface IUser {
+  password?: string;
+  employeeId?: string;
+  tel?: string;
+  department?: string;
+  position?: string;
+}
+
+export const patchUser = async (userId: number, data: IUser) => {
+  const access_token = getCookie('access_token');
+
+  const response = await axios.patch(
+    `${process.env.REACT_APP_SERVER_BASE_URL}/users/${userId}`,
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        Accept: 'application/json',
+        'Content-type': 'application/json',
+      },
+    },
+  );
+
+  return response.data;
+};

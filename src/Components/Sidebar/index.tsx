@@ -14,6 +14,8 @@ import {
   SearchOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import useAsync from 'Hooks/useAsync';
+import { getAuth } from 'Apis/authApi';
 
 const { Sider } = Layout;
 
@@ -45,6 +47,8 @@ export const Sidebar = () => {
 
     message.success('로그아웃 되었습니다.', 0.5, () => navigate('/'));
   };
+
+  const { data: me } = useAsync(getAuth, true);
 
   return (
     <Sider
@@ -115,7 +119,7 @@ export const Sidebar = () => {
 
       <Space className="sidebar-footer flex-center" direction="vertical">
         <div>
-          <b>김도현</b>님
+          <b>{me?.name}</b>님
         </div>
         <Button
           className="logout-button"

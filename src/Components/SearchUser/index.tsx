@@ -1,11 +1,13 @@
 import './index.scss';
 
 import { Empty, Input } from 'antd';
+import { getSearchedReservation } from 'Apis/reservationApi';
 import { getSearchedUsers } from 'Apis/userApi';
 import { SearchUserDescription } from 'Components/SearchUserDescription';
 import { SearchUserTable } from 'Components/SearchUserTable';
 import { Spinner } from 'Components/Spin';
 import useAsync from 'Hooks/useAsync';
+import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
 import { useEffect, useRef, useState } from 'react';
 
@@ -13,6 +15,9 @@ const { Search } = Input;
 
 export const SearchUser = () => {
   const [tab, setTab] = useState(false);
+
+  const [seatReservation, setSeatReservation] = useState<IReservation>();
+  const [roomReservation, setRoomReservation] = useState<IReservation>();
 
   const {
     loading,
@@ -23,7 +28,31 @@ export const SearchUser = () => {
     data: IUser[];
     execute: (name: string) => void;
   } = useAsync(getSearchedUsers);
+
   const [user, setUser] = useState<IUser>();
+
+  const { data: reservations, execute: refetchReservations } = useAsync(
+    getSearchedReservation,
+  );
+
+  useEffect(() => {
+    if (user) refetchReservations({ status: 1, userId: user.id });
+  }, [user]);
+
+  useEffect(() => {
+    if (reservations) {
+      setSeatReservation(
+        reservations.find(
+          (reservation: IReservation) => reservation.seat !== null,
+        ),
+      );
+      setRoomReservation(
+        reservations.find(
+          (reservation: IReservation) => reservation.room !== null,
+        ),
+      );
+    }
+  }, [reservations]);
 
   const ref = useRef<HTMLDivElement>(null);
   const [itemHeight, setItemHeight] = useState(0);
@@ -80,7 +109,14 @@ export const SearchUser = () => {
           </div>
         </div>
       )}
-      {tab && user && <SearchUserDescription user={user} goPrev={goPrev} />}
+      {tab && user && reservations && (
+        <SearchUserDescription
+          user={user}
+          seatReservation={seatReservation}
+          roomReservation={roomReservation}
+          goPrev={goPrev}
+        />
+      )}
     </>
   );
 };

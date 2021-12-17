@@ -5,10 +5,13 @@ import useAsync from 'Hooks/useAsync';
 import { useEffect, useState } from 'react';
 
 import { FormOutlined } from '@ant-design/icons';
+import { getAuth } from 'Apis/authApi';
 
 const { TextArea } = Input;
 
 export const QuestionCard = () => {
+  const { data: me } = useAsync(getAuth, true);
+
   const [visible, setVisible] = useState(false);
   const [question, setQuestion] = useState({
     title: '',
@@ -21,8 +24,8 @@ export const QuestionCard = () => {
     useAsync(getSearchedQuestions);
 
   useEffect(() => {
-    refetchQuestions(201);
-  }, []);
+    if (me) refetchQuestions(me?.id);
+  }, [me]);
 
   useEffect(() => {
     if (error) message.error(error, 0.5);
@@ -43,7 +46,7 @@ export const QuestionCard = () => {
 
     if (result)
       message.success('질문이 생성되었습니다.', 0.5, () => {
-        refetchQuestions(201);
+        refetchQuestions(me.id);
         hideMoal();
       });
   };

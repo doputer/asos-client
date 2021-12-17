@@ -1,47 +1,27 @@
-import { Button, Descriptions, Modal } from 'antd';
-import { getSearchedReservation } from 'Apis/reservationApi';
-import { SearchBoardCover } from 'Components/SearchBoardCover';
-import useAsync from 'Hooks/useAsync';
+import { Button, Descriptions } from 'antd';
+import { SearchSeatModal } from 'Components/SearchSeatModal';
 import { IReservation } from 'Interfaces/IReservation';
 import { IUser } from 'Interfaces/IUser';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Transition } from 'react-transition-group';
 
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
 export const SearchUserDescription = ({
   user,
+  seatReservation,
+  roomReservation,
   goPrev,
 }: {
   user: IUser;
+  seatReservation: IReservation | undefined;
+  roomReservation: IReservation | undefined;
   goPrev: () => void;
 }) => {
   const [transitionState, setTransitionState] = useState(true);
 
-  const [reservation, setReservation] = useState<IReservation>();
-  const {
-    loading,
-    data: reservations,
-    execute: refetchReservations,
-  } = useAsync(getSearchedReservation);
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  useEffect(() => {
-    refetchReservations({ status: 1, userId: user.id });
-  }, [user.id]);
-
-  useEffect(() => {
-    if (reservations && reservations[0]) setReservation(() => reservations[0]);
-  }, [loading]);
+  const [isSeatVisible, setSeatVisible] = useState(false);
+  const [isRoomVisible, setRoomVisible] = useState(false);
 
   return (
     <Transition
@@ -72,52 +52,54 @@ export const SearchUserDescription = ({
             <Descriptions.Item label="직책">{user.position}</Descriptions.Item>
             <Descriptions.Item label="이메일">{user.email}</Descriptions.Item>
             <Descriptions.Item label="연락처">{user.tel}</Descriptions.Item>
-            {reservation?.seat && (
+            {seatReservation && (
               <Descriptions.Item label="좌석 위치">
                 <span
                   style={{
                     marginRight: '10px',
                   }}
                 >
-                  {`${reservation.seat.floor.name} - ${reservation.seat.name}`}
+                  {`${seatReservation.seat.floor.name} - ${seatReservation.seat.name}`}
                 </span>
-                <Button type="ghost" shape="round" onClick={() => showModal()}>
+                <Button
+                  type="ghost"
+                  shape="round"
+                  onClick={() => setSeatVisible(true)}
+                >
                   위치 보기
                 </Button>
               </Descriptions.Item>
             )}
-            {reservation?.room && (
+            {roomReservation && (
               <Descriptions.Item label="회의실 위치">
                 <span
                   style={{
                     marginRight: '10px',
                   }}
                 >
-                  {`${reservation.room.floor.name} - ${reservation.room.name}`}
+                  {`${roomReservation.room.floor.name} - ${roomReservation.room.name}`}
                 </span>
-                <Button type="ghost" shape="round">
+                <Button
+                  type="ghost"
+                  shape="round"
+                  onClick={() => setRoomVisible(true)}
+                >
                   위치 보기
                 </Button>
               </Descriptions.Item>
             )}
           </Descriptions>
-          {reservation?.seat && (
-            <Modal
-              title={`위치 (${reservation.seat.floor.name} - ${reservation.seat.name})`}
-              visible={isModalVisible}
-              cancelButtonProps={undefined}
-              onCancel={handleCancel}
-              centered
-              bodyStyle={{
-                overflow: 'auto',
-                height: '480px',
-                margin: '8px',
-                padding: '0px',
-              }}
-              footer={null}
-            >
-              <SearchBoardCover reservation={reservation} />
-            </Modal>
+          {isSeatVisible && (
+            <SearchSeatModal
+              reservation={seatReservation}
+              setVisible={setSeatVisible}
+            />
+          )}
+          {isRoomVisible && (
+            <SearchSeatModal
+              reservation={roomReservation}
+              setVisible={setRoomVisible}
+            />
           )}
         </div>
       )}

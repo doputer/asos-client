@@ -3,6 +3,7 @@ import {
   FACILITY,
   RESERVED_SEAT,
   ROOM,
+  SEARCH_ROOM,
   SEARCH_SEAT,
   SEAT,
 } from 'Constants/object-type';
@@ -16,6 +17,7 @@ export const drawBoard = (
   rooms: IRoom[],
   facilities: IFacility[],
   findSeat: ISeat | null = null,
+  findRoom: IRoom | null = null,
 ) => {
   let board = Array.from({ length: floor.height }, () =>
     Array.from({ length: floor.width }, () => {
@@ -57,6 +59,15 @@ export const drawBoard = (
 
     board = board.map((row: ICol[], rowIndex: number) =>
       row.map((col: ICol, colIndex: number) => {
+        if (colIndex === findRoom?.x && rowIndex === findRoom?.y)
+          return {
+            type: SEARCH_ROOM,
+            id: findRoom.id,
+            name: findRoom.name,
+            width: findRoom.width,
+            height: findRoom.height,
+          };
+
         if (colIndex === room.x && rowIndex === room.y)
           return {
             type: ROOM,
