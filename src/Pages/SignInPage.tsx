@@ -23,10 +23,10 @@ const SignInPage = () => {
         <div
           className={'flex-center'}
           style={{
+            width: '100%',
             flex: 1,
             backgroundColor: '#fff',
             padding: '10px',
-            width: '100%',
           }}
         >
           <SignIn />
