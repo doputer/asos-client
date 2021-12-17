@@ -6,8 +6,8 @@
   gap: 10px;
 
   .left-pane {
-    flex: 1 0 auto;
-    min-width: 360px;
+    width: 100%;
+    max-width: 360px;
 
     .description-card {
       display: flex;
@@ -27,7 +27,7 @@
   }
 
   .right-pane {
-    flex: 9 0 auto;
+    flex: 1 0 auto;
     display: flex;
     height: 100%;
     border: 1px solid #f0f0f0;
