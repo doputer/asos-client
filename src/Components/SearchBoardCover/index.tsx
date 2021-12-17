@@ -14,18 +14,19 @@ export const SearchBoardCover = ({
   const [board, setBoard] = useState<ICol[][]>([]);
 
   const { loading, seats, rooms, facilities } = useArrangement(
-    reservation.seat.floor,
+    reservation.seat ? reservation.seat.floor : reservation.room.floor,
   );
 
   useEffect(() => {
     if (!loading)
       setBoard(
         drawBoard(
-          reservation.seat.floor,
+          reservation.seat ? reservation.seat.floor : reservation.room.floor,
           seats,
           rooms,
           facilities,
-          reservation.seat,
+          reservation.seat ? reservation.seat : null,
+          reservation.room ? reservation.room : null,
         ),
       );
   }, [loading]);

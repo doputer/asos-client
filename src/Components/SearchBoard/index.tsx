@@ -3,6 +3,7 @@ import {
   FACILITY,
   RESERVED_SEAT,
   ROOM,
+  SEARCH_ROOM,
   SEARCH_SEAT,
   SEAT,
 } from 'Constants/object-type';
@@ -10,14 +11,14 @@ import { ICol } from 'Interfaces/IBoard';
 
 export const SearchBoard = ({ board }: { board: ICol[][] }): JSX.Element => {
   const transformLength = (type: number, length: number) => {
-    if (type === ROOM) {
+    if (type === ROOM || type === SEARCH_ROOM) {
       if (length === 0) return `0px`;
       else return `${length * 50 + 10 * (length - 1)}px`;
     } else return `${length * 50}px`;
   };
 
   const itemStyle = (type: number) => {
-    if (type === SEARCH_SEAT)
+    if (type === SEARCH_SEAT || type === SEARCH_ROOM)
       return { backgroundColor: '#eb6767', color: '#fff', borderRadius: '4px' };
 
     if (type === EMPTY || type === FACILITY)
