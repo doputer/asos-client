@@ -1,4 +1,5 @@
 import { Avatar, Button, Card, Divider, Empty, Space } from 'antd';
+import { getAuth } from 'Apis/authApi';
 import {
   getSearchedAllReservation,
   getSearchedReservation,
@@ -80,6 +81,8 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
     }
   }, [allReservations]);
 
+  const { data: me } = useAsync(getAuth, true);
+
   return (
     <>
       {loading && !user && !reservations !== null ? (
@@ -131,7 +134,7 @@ export const MyPageDescription = ({ userId }: { userId: number }) => {
                       fontSize: '1.5em',
                     }}
                   >
-                    {'김 도 현 '}
+                    {me?.name}
                   </b>
                   님
                 </span>
