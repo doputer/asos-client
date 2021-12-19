@@ -1,12 +1,12 @@
 import { Layout } from 'antd';
 import { ContentContainer } from 'Components/ContentContainer';
-import { Sidebar } from 'Components/Sidebar';
+import { Menubar } from 'Components/Menubar';
 import { Outlet } from 'react-router-dom';
 
 const UserPage = () => {
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Sidebar />
+    <Layout className="content-container">
+      <Menubar />
       <ContentContainer>
         <Outlet />
       </ContentContainer>

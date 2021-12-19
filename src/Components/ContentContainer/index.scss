@@ -1,7 +1,7 @@
 .content-container {
-  // background-color: #fff;
+  height: 100vh;
 
   .container-content {
-    margin: 12px;
+    margin: calc(64px + 12px) 12px 12px 12px;
   }
 }

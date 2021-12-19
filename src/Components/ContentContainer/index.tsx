@@ -9,9 +9,5 @@ export const ContentContainer = ({
 }: {
   children: React.ReactNode;
 }) => {
-  return (
-    <Layout className="content-container">
-      <Content className="container-content">{children}</Content>
-    </Layout>
-  );
+  return <Content className="container-content">{children}</Content>;
 };
