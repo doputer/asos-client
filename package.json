@@ -1,6 +1,6 @@
 {
   "name": "asos-client-ts",
-  "version": "0.4.0",
+  "version": "0.5.4",
   "private": true,
   "homepage": ".",
   "dependencies": {
