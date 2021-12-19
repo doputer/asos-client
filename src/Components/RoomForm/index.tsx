@@ -34,13 +34,11 @@ interface IParticipant {
 export const RoomForm = ({
   room,
   selectTime,
-  boxHeight,
   handleDate,
   refreshTimeTable,
 }: {
   room: IRoomRow;
   selectTime: ITimeRange;
-  boxHeight: number;
   handleDate: (date: Date) => void;
   refreshTimeTable: ({
     roomId,
@@ -250,8 +248,6 @@ export const RoomForm = ({
       <div
         style={{
           width: '100%',
-          overflow: 'auto',
-          maxHeight: boxHeight - 200,
         }}
       >
         <List

@@ -1,0 +1,40 @@
+.menubar {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+  position: fixed;
+  z-index: 1;
+  overflow: auto;
+  box-shadow: 0px 1px 4px rgb(19 24 48 / 10%);
+
+  .menu-logo {
+    width: 128px;
+  }
+
+  .menu {
+    .menu-item {
+      width: fit-content;
+      border: none;
+      padding: 0 10px;
+      margin: 0 10px;
+      box-shadow: none;
+
+      &.selected {
+        color: #4895ef;
+      }
+    }
+  }
+
+  .menu-footer {
+    width: 128px;
+    white-space: nowrap;
+
+    .logout-button {
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+    }
+  }
+}
