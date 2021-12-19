@@ -8,7 +8,7 @@ import { RoomTimeTable } from 'Components/RoomTimeTable';
 import useAsync from 'Hooks/useAsync';
 import { ITimeRange } from 'Interfaces/ITimeRange';
 import { IRoomRow } from 'Interfaces/Tables/IRoomRow';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Transition } from 'react-transition-group';
 import { getFormatDate } from 'Utils/moment';
 
@@ -41,13 +41,6 @@ export const RoomReservation = ({
     endTime: new Date(),
   });
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [boxHeight, setBoxHeight] = useState(0);
-
-  useEffect(() => {
-    if (ref.current) setBoxHeight(ref.current.clientHeight);
-  }, [ref.current]);
-
   const handleDate = async (date: Date) => {
     refetchTimeTable({
       roomId: room.key,
@@ -74,24 +67,18 @@ export const RoomReservation = ({
             <RoomDescription room={room} />
           </div>
 
-          <div className="reservation-content" ref={ref}>
-            <div className="content-left">
-              <RoomTimeTable
-                timeTable={timeTable}
-                boxHeight={boxHeight}
-                loading={loading}
-                setSelectTime={setSelectTime}
-              />
-            </div>
-            <div className="content-right">
-              <RoomForm
-                room={room}
-                selectTime={selectTime}
-                boxHeight={boxHeight}
-                handleDate={handleDate}
-                refreshTimeTable={refetchTimeTable}
-              />
-            </div>
+          <div className="reservation-content">
+            <RoomTimeTable
+              timeTable={timeTable}
+              loading={loading}
+              setSelectTime={setSelectTime}
+            />
+            <RoomForm
+              room={room}
+              selectTime={selectTime}
+              handleDate={handleDate}
+              refreshTimeTable={refetchTimeTable}
+            />
           </div>
         </div>
       )}

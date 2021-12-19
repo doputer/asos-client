@@ -12,19 +12,7 @@
   .reservation-content {
     flex: 1;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
-
-    .content-left {
-      flex: 1;
-      flex-grow: 1;
-      flex-basis: 400px;
-    }
-
-    .content-right {
-      flex: 1;
-      flex-shrink: 0;
-      flex-basis: 100px;
-    }
   }
 }

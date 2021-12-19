@@ -10,12 +10,10 @@ import { getFormatDate } from 'Utils/moment';
 
 export const RoomTimeTable = ({
   timeTable,
-  boxHeight,
   loading,
   setSelectTime,
 }: {
   timeTable: ITimeTable[];
-  boxHeight: number;
   loading: boolean;
   setSelectTime: ({ startTime, endTime }: ITimeRange) => void;
 }) => {
@@ -156,7 +154,6 @@ export const RoomTimeTable = ({
         },
       }}
       sticky
-      scroll={{ y: boxHeight - 47 }}
       onRow={(record: ITimeTableRow) => {
         return {
           onClick: () => handleSelect(record.key),
