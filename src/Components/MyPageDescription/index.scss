@@ -5,37 +5,73 @@
   flex-wrap: wrap;
   gap: 10px;
 
-  .left-pane {
-    width: 100%;
-    max-width: 360px;
+  @media screen and (min-width: 992px) {
+    .left-pane {
+      width: 360px;
 
-    .description-card {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+      .description-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
 
-      .card-header {
-        width: 100%;
-        height: inherit;
-        justify-content: space-evenly;
+        .card-header {
+          width: 100%;
+          height: inherit;
+          justify-content: space-evenly;
 
-        .header-title {
-          font-size: 1.5em;
+          .header-title {
+            font-size: 1.5em;
+          }
         }
+      }
+    }
+
+    .right-pane {
+      flex: 1;
+      display: flex;
+      height: 100%;
+      border: 1px solid #f0f0f0;
+      overflow: auto;
+
+      .empty-pane {
+        width: 100%;
+        height: 100%;
       }
     }
   }
 
-  .right-pane {
-    flex: 1 0 auto;
-    display: flex;
-    height: 100%;
-    border: 1px solid #f0f0f0;
-    overflow: auto;
-
-    .empty-pane {
+  @media screen and (max-width: 991px) {
+    .left-pane {
       width: 100%;
-      height: 100%;
+      height: min-content;
+
+      .description-card {
+        display: flex;
+        flex-direction: column;
+
+        .card-header {
+          width: 100%;
+          height: inherit;
+          justify-content: space-evenly;
+
+          .header-title {
+            font-size: 1.5em;
+          }
+        }
+      }
+    }
+
+    .right-pane {
+      width: 100%;
+      display: flex;
+      height: 360px;
+      border: 1px solid #f0f0f0;
+      overflow: auto;
+
+      .empty-pane {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 }
