@@ -1,7 +1,19 @@
 .content-container {
   height: 100vh;
 
-  .container-content {
-    margin: calc(64px + 12px) 12px 12px 12px;
+  @media screen and (min-width: 992px) {
+    .container-content {
+      margin: calc(64px + 12px) 12px 12px 12px;
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+    .container-content {
+      margin-top: 64px;
+    }
+
+    .ant-card-small > .ant-card-body {
+      padding: 4px;
+    }
   }
 }
